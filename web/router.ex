@@ -19,6 +19,9 @@ defmodule JustCi.Router do
     get "/", PageController, :index
     resources "/posts", PostController
     resources "/registrations", RegistrationController, only: [:new, :create]
+    get "/login",  SessionController, :new
+    post "/login",  SessionController, :create
+    delete "/logout", SessionController, :delete
   end
 
   # Other scopes may use custom stacks.

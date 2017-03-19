@@ -52,6 +52,8 @@ defmodule JustCi.Web do
       import JustCi.Router.Helpers
       import JustCi.ErrorHelpers
       import JustCi.Gettext
+
+      import JustCi.Session, only: [current_user: 1, logged_in?: 1]
     end
   end
 

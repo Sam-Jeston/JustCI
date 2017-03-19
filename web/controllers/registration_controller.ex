@@ -13,12 +13,13 @@ defmodule JustCi.RegistrationController do
     case JustCi.Registration.create(changeset, JustCi.Repo) do
       {:ok, changeset} ->
         conn
-          |> put_flash(:info, "Your account was created")
-          |> redirect(to: "/")
+        |> put_session(:current_user, changeset.id)
+        |> put_flash(:info, "Your account was created")
+        |> redirect(to: "/")
       {:error, changeset} ->
         conn
-          |> put_flash(:info, "Unable to create account")
-          |> render("new.html", changeset: changeset)
+        |> put_flash(:info, "Unable to create account")
+        |> render("new.html", changeset: changeset)
     end
   end
 end
