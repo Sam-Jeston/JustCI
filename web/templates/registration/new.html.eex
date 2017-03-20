@@ -24,4 +24,6 @@
   <div class="form-group">
     <%= submit "Signup", class: "btn btn-primary" %>
   </div>
+
+  <%= link "Back to Login", to: session_path(@conn, :create) %>
 <% end %>
