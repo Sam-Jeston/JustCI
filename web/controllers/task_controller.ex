@@ -10,15 +10,12 @@ defmodule JustCi.TaskController do
   end
 
   def new(conn, params) do
-    IO.inspect params
     changeset = Task.changeset(%Task{}, params)
     render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"task" => task_params}) do
-    IO.inspect task_params
     changeset = Task.changeset(%Task{}, task_params)
-    IO.inspect changeset
 
     case Repo.insert(changeset) do
       {:ok, _task} ->
