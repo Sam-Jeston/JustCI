@@ -1,8 +1,9 @@
-defmodule JustCi.Post do
+defmodule JustCi.Template do
   use JustCi.Web, :model
 
-  schema "posts" do
-    field :body, :string
+  schema "templates" do
+    field :name, :string
+    has_many :tasks, JustCi.Task
 
     timestamps()
   end
@@ -12,7 +13,7 @@ defmodule JustCi.Post do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:body])
-    |> validate_required([:body])
+    |> cast(params, [:name])
+    |> validate_required([:name])
   end
 end

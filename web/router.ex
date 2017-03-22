@@ -19,6 +19,12 @@ defmodule JustCi.Router do
 
     get "/", PageController, :index
     resources "/posts", PostController
+    resources "/templates", TemplateController do
+      resources "/tasks", TaskController
+    end
+
+    resources "/tasks", TaskController
+
     resources "/registrations", RegistrationController, only: [:new, :create]
     get "/login",  SessionController, :new
     post "/login",  SessionController, :create

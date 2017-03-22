@@ -22,11 +22,14 @@
           <nav class="navbar navbar-default">
             <ul class="nav navbar-nav">
               <li><a href="<%= page_path(@conn, :index) %>">Home</a></li>
-              <li><a href="<%= post_path(@conn, :index) %>">Posts</a></li>
-                <li><%= current_user(@conn).email %></li>
-                <li><%= link "Logout", to: session_path(@conn, :delete), method: :delete %></li>
+              <li><a href="<%= template_path(@conn, :index) %>">Templates</a></li>
+              <li>
+                <%= link "Logout", to: session_path(@conn, :delete), method: :delete, class: "navbar-text" %>
+              </li>
             </ul>
+            <p class="navbar-text navbar-right">Signed in as <%= current_user(@conn).email %></p>
           </nav>
+
         <% end %>
         <%= render @view_module, @view_template, assigns %>
       </main>
