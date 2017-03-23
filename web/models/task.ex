@@ -15,7 +15,6 @@ defmodule JustCi.Task do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:description, :command, :template_id])
-    |> cast_assoc(:template)
     |> assoc_constraint(:template)
     |> validate_required([:description, :command])
   end

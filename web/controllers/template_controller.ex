@@ -4,7 +4,7 @@ defmodule JustCi.TemplateController do
   alias JustCi.Template
 
   def index(conn, _params) do
-    templates = Template |> Repo.all |> Repo.preload([:tasks])
+    templates = Template |> Repo.all
     IO.inspect Enum.at(templates, 0)
     render(conn, "index.html", templates: templates)
   end
@@ -18,17 +18,17 @@ defmodule JustCi.TemplateController do
     changeset = Template.changeset(%Template{}, template_params)
 
     case Repo.insert(changeset) do
-      {:ok, _template} ->
+      {:ok, template} ->
         conn
         |> put_flash(:info, "Template created successfully.")
-        |> redirect(to: template_path(conn, :index))
+        |> redirect(to: template_path(conn, :show, template))
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
   end
 
   def show(conn, %{"id" => id}) do
-    template = Repo.get!(Template, id)
+    template = Template |> Repo.get!(id) |> Repo.preload([:tasks])
     render(conn, "show.html", template: template)
   end
 

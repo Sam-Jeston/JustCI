@@ -5,7 +5,7 @@ defmodule JustCi.Repo.Migrations.CreateTask do
     create table(:tasks) do
       add :description, :string
       add :command, :string
-      add :template_id, references(:users, on_delete: :nothing)
+      add :template_id, references(:templates, on_delete: :nothing)
 
       timestamps()
     end

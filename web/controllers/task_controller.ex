@@ -16,13 +16,16 @@ defmodule JustCi.TaskController do
 
   def create(conn, %{"task" => task_params}) do
     changeset = Task.changeset(%Task{}, task_params)
+    IO.inspect task_params
+    template = Template |> Repo.get!(task_params["template_id"])
 
     case Repo.insert(changeset) do
       {:ok, _task} ->
         conn
         |> put_flash(:info, "Task created successfully.")
-        |> redirect(to: task_path(conn, :index))
+        |> redirect(to: template_path(conn, :show, template))
       {:error, changeset} ->
+        IO.inspect changeset
         render(conn, "new.html", changeset: changeset)
     end
   end

@@ -1,13 +1,18 @@
-<h2>Show template</h2>
+<h2>Template: <%= @template.name %></h2>
 
-<ul>
+<ol>
 
-  <li>
-    <strong>Name:</strong>
-    <%= @template.name %>
-  </li>
+  <%= for task <- @template.tasks do %>
+      <li>
+        <b><%= task.description %></b>:
+        <%= task.command %></b>
+      </tr>
+  <% end %>
 
-</ul>
+</ol>
 
-<%= link "Edit", to: template_path(@conn, :edit, @template) %>
-<%= link "Back", to: template_path(@conn, :index) %>
+<%= link "Add task", to: template_task_path(@conn, :new, @template), class: "btn btn-primary" %>
+<br/>
+<br/>
+<%= link "Edit", to: template_path(@conn, :edit, @template), class: "btn btn-default" %></button>
+<%= link "Back", to: template_path(@conn, :index), class: "btn btn-default" %></button>

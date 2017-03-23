@@ -13,13 +13,7 @@
     <tr>
       <td><%= template.name %></td>
 
-      <%= for task <- template.tasks do %>
-        <td><%= task.description %></td>
-        <td><%= task.command %></td>
-      <% end %>
-
       <td class="text-right">
-        <%= link "Add task", to: template_task_path(@conn, :new, template), class: "btn btn-default btn-xs" %>
         <%= link "Show", to: template_path(@conn, :show, template), class: "btn btn-default btn-xs" %>
         <%= link "Edit", to: template_path(@conn, :edit, template), class: "btn btn-default btn-xs" %>
         <%= link "Delete", to: template_path(@conn, :delete, template), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
@@ -29,4 +23,4 @@
   </tbody>
 </table>
 
-<%= link "New template", to: template_path(@conn, :new) %>
+<%= link "New template", to: template_path(@conn, :new), class: "btn btn-primary" %>
