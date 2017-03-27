@@ -15,8 +15,13 @@ defmodule JustCi.TaskController do
   end
 
   def create(conn, %{"task" => task_params}) do
-    changeset = Task.changeset(%Task{}, task_params)
-    IO.inspect task_params
+    query = from t in Task, order_by: t.order
+    template = Template |> Repo.get!(task_params["template_id"]) |> Repo.preload(tasks: query)
+    most_recent_task = List.last(template.tasks)
+
+    merged_task = Map.merge(task_params, %{ "order" => most_recent_task.order + 1 })
+    changeset = Task.changeset(%Task{}, merged_task)
+
     template = Template |> Repo.get!(task_params["template_id"])
 
     case Repo.insert(changeset) do
