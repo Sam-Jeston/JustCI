@@ -11,7 +11,14 @@
 //
 // If you no longer want to use a dependency, remember
 // to also remove its path from "config.paths.watched".
-import "phoenix_html"
+import $ from 'jquery'
+import 'jquery-ui-bundle'
+
+import { orderTasks } from './templates/task_order'
+
+export function App () {
+  orderTasks()
+}
 
 // Import local files
 //

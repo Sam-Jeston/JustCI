@@ -26,13 +26,16 @@ defmodule JustCi.Router do
     resources "/tasks", TaskController
 
     resources "/registrations", RegistrationController, only: [:new, :create]
+
     get "/login",  SessionController, :new
     post "/login",  SessionController, :create
     delete "/logout", SessionController, :delete
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", JustCi do
-  #   pipe_through :api
-  # end
+  scope "/api", JustCi do
+    pipe_through :api
+
+    put "/tasks/update_order", TaskController, :update_orders
+  end
 end

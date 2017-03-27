@@ -2,6 +2,7 @@ defmodule JustCi.TemplateController do
   use JustCi.Web, :controller
 
   alias JustCi.Template
+  alias JustCi.Task
 
   def index(conn, _params) do
     templates = Template |> Repo.all
@@ -28,7 +29,8 @@ defmodule JustCi.TemplateController do
   end
 
   def show(conn, %{"id" => id}) do
-    template = Template |> Repo.get!(id) |> Repo.preload([:tasks])
+    query = from t in Task, order_by: t.order
+    template = Template |> Repo.get!(id) |> Repo.preload(tasks: query)
     render(conn, "show.html", template: template)
   end
 

@@ -1,15 +1,14 @@
 <h2>Template: <%= @template.name %></h2>
 
-<ol>
-
+<div id="templateTaskOrder">
   <%= for task <- @template.tasks do %>
-      <li>
-        <b><%= task.description %></b>:
-        <%= task.command %></b>
-      </tr>
+    <div style="display:block;border:solid;" task_id="<%= task.id %>">
+      <b><%= task.description %></b>:
+      <%= task.command %>
+      order: <%= task.order %>
+    </div>
   <% end %>
-
-</ol>
+</div>
 
 <%= link "Add task", to: template_task_path(@conn, :new, @template), class: "btn btn-primary" %>
 <br/>

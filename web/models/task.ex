@@ -4,6 +4,7 @@ defmodule JustCi.Task do
   schema "tasks" do
     field :description, :string
     field :command, :string
+    field :order, :integer
     belongs_to :template, JustCi.Template
 
     timestamps()
@@ -14,7 +15,7 @@ defmodule JustCi.Task do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:description, :command, :template_id])
+    |> cast(params, [:description, :command, :template_id, :order])
     |> assoc_constraint(:template)
     |> validate_required([:description, :command])
   end

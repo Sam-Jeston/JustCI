@@ -66,4 +66,16 @@ defmodule JustCi.TaskController do
     |> put_flash(:info, "Task deleted successfully.")
     |> redirect(to: task_path(conn, :index))
   end
+
+  def update_orders(conn, %{"_json" => task_orders}) do
+    task_ids = Enum.map(task_orders, fn(t) -> update_order(t) end)
+    send_resp(conn, :no_content, "")
+  end
+
+  def update_order(%{"id" => id, "order" => order}) do
+    task = Repo.get!(Task, id)
+    IO.inspect order
+    changeset = Task.changeset(task, %{"order" => order})
+    Repo.update!(changeset)
+  end
 end
