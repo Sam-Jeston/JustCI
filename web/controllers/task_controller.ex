@@ -47,6 +47,9 @@ defmodule JustCi.TaskController do
   end
 
   def update(conn, %{"id" => id, "task" => task_params}) do
+    query = from t in Task, order_by: t.order
+    template = Template |> Repo.get!(task_params["template_id"]) |> Repo.preload(tasks: query)
+
     task = Repo.get!(Task, id)
     changeset = Task.changeset(task, task_params)
 
@@ -54,13 +57,15 @@ defmodule JustCi.TaskController do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task updated successfully.")
-        |> redirect(to: task_path(conn, :show, task))
+        |> redirect(to: template_path(conn, :show, template))
       {:error, changeset} ->
         render(conn, "edit.html", task: task, changeset: changeset)
     end
   end
 
   def delete(conn, %{"id" => id}) do
+    IO.puts "Do we even hit this????"
+
     task = Repo.get!(Task, id)
 
     # Here we use delete! (with a bang) because we expect

@@ -2,10 +2,17 @@
 
 <div id="templateTaskOrder">
   <%= for task <- @template.tasks do %>
-    <div style="display:block;border:solid;" task_id="<%= task.id %>">
-      <b><%= task.description %></b>:
-      <%= task.command %>
-      order: <%= task.order %>
+    <div class="panel panel-default" task_id="<%= task.id %>">
+      <div class="panel-body">
+        <span class="grippy"></span>
+        <b><%= task.description %></b>:
+        <%= task.command %>
+        order: <%= task.order %>
+        <div style="float:right">
+          <%= link "Edit", to: task_path(@conn, :edit, task), class: "btn btn-xs" %>
+          <%= link "Delete", to: task_path(@conn, :delete, task), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+        </div>
+      </div>
     </div>
   <% end %>
 </div>
@@ -13,5 +20,5 @@
 <%= link "Add task", to: template_task_path(@conn, :new, @template), class: "btn btn-primary" %>
 <br/>
 <br/>
-<%= link "Edit", to: template_path(@conn, :edit, @template), class: "btn btn-default" %></button>
-<%= link "Back", to: template_path(@conn, :index), class: "btn btn-default" %></button>
+<%= link "Edit", to: template_path(@conn, :edit, @template), class: "btn btn-default" %>
+<%= link "Back", to: template_path(@conn, :index), class: "btn btn-default" %>
