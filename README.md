@@ -9,3 +9,8 @@ Phoenix commands:
   * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
   * Install Node.js dependencies with `npm install`
   * Start Phoenix endpoint with `mix phoenix.server`
+
+Use Ngrok for local testing of CI integration!
+`ngrok http 4000`
+
+Continue to follow this for Github Integration - https://developer.github.com/guides/building-a-ci-server/

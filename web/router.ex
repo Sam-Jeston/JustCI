@@ -37,5 +37,8 @@ defmodule JustCi.Router do
     pipe_through :api
 
     put "/tasks/update_order", TaskController, :update_orders
+
+    # GitHub Integration
+    post "/github/event_handler", GithubController, :start_job
   end
 end
