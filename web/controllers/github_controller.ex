@@ -1,6 +1,8 @@
 defmodule JustCi.GithubController do
   use JustCi.Web, :controller
 
+  alias JustCi.Build
+
   def start_job(conn, params) do
     headers = conn.req_headers
 
@@ -8,17 +10,18 @@ defmodule JustCi.GithubController do
     github_event = elem(github_event_tuple, 1)
 
     if valid_event?(github_event) && valid_action?(params["action"]) do
-      # TODO: Before we set pending status, lets check that we have a job that matches
-      # the name of the repo
+      { repo, test_sha, owner } = assign_repo_vals(github_event, params)
 
-      if is_pr?(github_event) do
-        repo = params["pull_request"]["base"]["repo"]["name"]
-        test_sha = params["pull_request"]["head"]["sha"]
-        owner = params["pull_request"]["base"]["repo"]["owner"]["login"]
-      else
-        repo = params["repository"]["name"]
-        test_sha = params["after"]
-        owner = params["repository"]["owner"]["name"]
+      build_query = from b in Build,
+        where: b.repo == ^repo
+      build = Repo.all(build_query)
+
+      build_match = length build
+
+      if build_match != 1 do
+        conn
+        |> put_status(500)
+        |> json(%{message: "No matching build"})
       end
 
       set_pending_status(repo, owner, test_sha)
@@ -28,6 +31,21 @@ defmodule JustCi.GithubController do
     end
 
     send_resp(conn, :no_content, "")
+  end
+
+  defp assign_repo_vals(github_event, github_body) do
+    case is_pr?(github_event) do
+      true -> {
+        github_body["pull_request"]["base"]["repo"]["name"],
+        github_body["pull_request"]["head"]["sha"],
+        github_body["pull_request"]["base"]["repo"]["owner"]["login"]
+      }
+      false -> {
+        github_body["repository"]["name"],
+        github_body["after"],
+        github_body["repository"]["owner"]["name"]
+      }
+    end
   end
 
   defp valid_event?(event_name) do
@@ -46,10 +64,6 @@ defmodule JustCi.GithubController do
   # TODO: It will be better to use an access token here
   defp set_pending_status(repo, owner, sha) do
     password = System.get_env("GITHUB_PASSWORD")
-    IO.inspect password
-
-    IO.inspect repo
-    IO.inspect sha
     client = Tentacat.Client.new(%{user: "Sam-Jeston", password: password})
 
     comment_body = %{

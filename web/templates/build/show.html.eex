@@ -1,0 +1,18 @@
+<h2>Show build</h2>
+
+<ul>
+
+  <li>
+    <strong>Repo:</strong>
+    <%= @build.repo %>
+  </li>
+
+  <li>
+    <strong>Template:</strong>
+    <%= @build.template_id %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: build_path(@conn, :edit, @build) %>
+<%= link "Back", to: build_path(@conn, :index) %>

@@ -1,0 +1,28 @@
+<h2>Listing builds</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Repo</th>
+      <th>Template</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for build <- @builds do %>
+    <tr>
+      <td><%= build.repo %></td>
+      <td><%= build.template.name %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: build_path(@conn, :show, build), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: build_path(@conn, :edit, build), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: build_path(@conn, :delete, build), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New build", to: build_path(@conn, :new) %>
