@@ -2,6 +2,7 @@ defmodule JustCi.GithubController do
   use JustCi.Web, :controller
 
   alias JustCi.Build
+  alias JustCi.BuilWorker
 
   def start_job(conn, params) do
     headers = conn.req_headers
@@ -28,6 +29,8 @@ defmodule JustCi.GithubController do
 
       # TODO: When we start the job, store the repo, test_sha and owner in the db
       # for easy reference when we go to set it to failed or passed
+      builder = Enum.at(build, 0)
+      BuilWorker.start(build, test_sha, owner)
     end
 
     send_resp(conn, :no_content, "")

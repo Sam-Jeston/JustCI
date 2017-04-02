@@ -16,7 +16,7 @@ defmodule JustCi.Job do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:status, :log, :sha, :owner])
-    |> validate_required([:status, :log, :sha, :owner])
+    |> cast(params, [:status, :log, :sha, :owner, :build_id])
+    |> validate_required([:status, :log, :sha, :owner, :build_id])
   end
 end
