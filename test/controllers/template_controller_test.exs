@@ -30,7 +30,7 @@ defmodule JustCi.TemplateControllerTest do
   test "shows chosen resource", %{conn: conn} do
     template = Repo.insert! %Template{}
     conn = get conn, template_path(conn, :show, template)
-    assert html_response(conn, 200) =~ "Show template"
+    assert html_response(conn, 200) =~ "Template: "
   end
 
   test "renders page not found when id is nonexistent", %{conn: conn} do

@@ -24,7 +24,7 @@ defmodule JustCi.BuildController do
         |> put_flash(:info, "Build created successfully.")
         |> redirect(to: build_path(conn, :index))
       {:error, changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "new.html", %{changeset: changeset, templates: [%Template{}]})
     end
   end
 
@@ -34,12 +34,14 @@ defmodule JustCi.BuildController do
   end
 
   def edit(conn, %{"id" => id}) do
+    templates = Repo.all(Template)
     build = Repo.get!(Build, id)
     changeset = Build.changeset(build)
-    render(conn, "edit.html", build: build, changeset: changeset)
+    render(conn, "edit.html", build: build, changeset: changeset, templates: templates)
   end
 
   def update(conn, %{"id" => id, "build" => build_params}) do
+    templates = Repo.all(Template)
     build = Repo.get!(Build, id)
     changeset = Build.changeset(build, build_params)
 
@@ -49,7 +51,7 @@ defmodule JustCi.BuildController do
         |> put_flash(:info, "Build updated successfully.")
         |> redirect(to: build_path(conn, :show, build))
       {:error, changeset} ->
-        render(conn, "edit.html", build: build, changeset: changeset)
+        render(conn, "edit.html", build: build, changeset: changeset, templates: templates)
     end
   end
 

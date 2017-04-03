@@ -5,13 +5,12 @@ defmodule JustCi.TaskControllerTest do
   alias JustCi.Template
 
   @valid_template_attrs %{name: "some template"}
-  @invalid_attrs %{}
   @valid_attrs %{command: "some content", description: "some content"}
 
   setup do
     changeset = Template.changeset(%Template{}, @valid_template_attrs)
     template = Repo.insert! changeset
-    [template: template]
+    {:ok, template: template}
   end
 
   test "lists all entries on index", %{conn: conn} do
@@ -24,9 +23,10 @@ defmodule JustCi.TaskControllerTest do
     assert html_response(conn, 200) =~ "New task"
   end
 
-  test "creates resource and redirects when data is valid", %{conn: conn} do
-    conn = post conn, task_path(conn, :create), task: @valid_attrs
-    assert redirected_to(conn) == task_path(conn, :index)
+  test "creates resource and redirects when data is valid", %{conn: conn, template: template} do
+    attrs = Map.merge(@valid_attrs, %{template_id: template.id})
+    conn = post conn, task_path(conn, :create), task: attrs
+    assert redirected_to(conn) == template_path(conn, :show, template)
     assert Repo.get_by(Task, @valid_attrs)
   end
 
@@ -49,18 +49,12 @@ defmodule JustCi.TaskControllerTest do
     assert html_response(conn, 200) =~ "Edit task"
   end
 
-  test "updates chosen resource and redirects when data is valid", %{conn: conn} do
-    attrs = Map.merge(@valid_attrs, %{template_id: context[:template].id})
+  test "updates chosen resource and redirects when data is valid", %{conn: conn, template: template} do
+    attrs = Map.merge(@valid_attrs, %{template_id: template.id})
     task = Repo.insert! %Task{}
     conn = put conn, task_path(conn, :update, task), task: attrs
-    assert redirected_to(conn) == task_path(conn, :show, task)
+    assert redirected_to(conn) == template_path(conn, :show, template)
     assert Repo.get_by(Task, attrs)
-  end
-
-  test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
-    task = Repo.insert! %Task{}
-    conn = put conn, task_path(conn, :update, task), task: @invalid_attrs
-    assert html_response(conn, 200) =~ "Edit task"
   end
 
   test "deletes chosen resource", %{conn: conn} do

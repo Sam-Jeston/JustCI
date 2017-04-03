@@ -3,7 +3,7 @@ defmodule JustCi.BuildTest do
 
   alias JustCi.Build
 
-  @valid_attrs %{repo: "some content"}
+  @valid_attrs %{repo: "some content", template_id: 1}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

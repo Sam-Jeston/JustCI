@@ -6,7 +6,6 @@ defmodule JustCi.TemplateController do
 
   def index(conn, _params) do
     templates = Template |> Repo.all
-    IO.inspect Enum.at(templates, 0)
     render(conn, "index.html", templates: templates)
   end
 
