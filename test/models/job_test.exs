@@ -3,7 +3,13 @@ defmodule JustCi.JobTest do
 
   alias JustCi.Job
 
-  @valid_attrs %{log: "some content", owner: "some content", sha: "some content", status: "some content"}
+  @valid_attrs %{
+    log: "some content",
+    owner: "some content",
+    sha: "some content",
+    status: "some content",
+    build_id: 1
+  }
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

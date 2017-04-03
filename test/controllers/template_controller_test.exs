@@ -17,8 +17,9 @@ defmodule JustCi.TemplateControllerTest do
 
   test "creates resource and redirects when data is valid", %{conn: conn} do
     conn = post conn, template_path(conn, :create), template: @valid_attrs
-    assert redirected_to(conn) == template_path(conn, :index)
-    assert Repo.get_by(Template, @valid_attrs)
+    template = Repo.get_by(Template, @valid_attrs)
+    assert redirected_to(conn) == template_path(conn, :show, template.id)
+    assert template
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
@@ -33,7 +34,7 @@ defmodule JustCi.TemplateControllerTest do
   end
 
   test "renders page not found when id is nonexistent", %{conn: conn} do
-    assert_error_sent 404, fn ->
+    assert_error_sent 302, fn ->
       get conn, template_path(conn, :show, -1)
     end
   end

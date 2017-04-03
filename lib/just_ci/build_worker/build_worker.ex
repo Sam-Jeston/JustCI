@@ -1,9 +1,8 @@
 defmodule JustCi.BuildWorker do
   import Plug.Conn
-
   alias JustCi.Job
 
-  def start (build, sha, owner) do
+  def start(build, sha, owner) do
     create_job(build.id, sha, owner)
 
     # This should also be managed by the Agent
@@ -13,7 +12,7 @@ defmodule JustCi.BuildWorker do
   end
 
   def implement_job do
-    
+
   end
 
   def create_job(build_id, sha, owner) do

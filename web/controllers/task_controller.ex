@@ -68,8 +68,6 @@ defmodule JustCi.TaskController do
   end
 
   def delete(conn, %{"id" => id}) do
-    IO.puts "Do we even hit this????"
-
     task = Repo.get!(Task, id)
 
     # Here we use delete! (with a bang) because we expect

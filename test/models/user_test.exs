@@ -3,7 +3,10 @@ defmodule JustCi.UserTest do
 
   alias JustCi.User
 
-  @valid_attrs %{crypted_password: "some content", email: "some content"}
+  @valid_attrs %{
+    password: "some content",
+    email: "x@y"
+  }
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

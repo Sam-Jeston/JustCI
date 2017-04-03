@@ -2,6 +2,8 @@ defmodule JustCi.BuildControllerTest do
   use JustCi.ConnCase
 
   alias JustCi.Build
+  alias JustCi.Template
+
   @valid_attrs %{repo: "some content"}
   @invalid_attrs %{}
 
@@ -22,7 +24,7 @@ defmodule JustCi.BuildControllerTest do
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
-    conn = post conn, build_path(conn, :create), build: @invalid_attrs
+    conn = post conn, build_path(conn, :create), build: @invalid_attrs, templates: [%{name: "x", id: 1}]
     assert html_response(conn, 200) =~ "New build"
   end
 
