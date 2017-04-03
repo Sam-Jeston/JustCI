@@ -3,5 +3,10 @@ addons:
   postgresql: '9.5'
 services:
   - postgresql
+elixir:
+  - 1.4.2
+otp_release:
+  - 19.1
+# Maybe need some nvm goodness here as well with an npm i
 before_script:
   - mix do ecto.create, ecto.migrate
