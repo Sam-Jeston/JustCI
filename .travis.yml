@@ -1,1 +1,7 @@
 language: elixir
+addons:
+  postgresql: '9.5'
+services:
+  - postgresql
+before_script:
+  - mix do ecto.create, ecto.migrate
