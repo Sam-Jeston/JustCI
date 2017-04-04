@@ -26,7 +26,6 @@ defmodule JustCi.BuildTask do
     |> preload([j, build, template, tasks], [build: {build, template: {template, tasks: tasks}}])
     |> Repo.one
 
-    IO.inspect loaded_job.build.template.tasks
     loaded_job.build.template.tasks
   end
 

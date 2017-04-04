@@ -53,6 +53,8 @@ defmodule JustCi.BuildTaskTest do
 
   test "find_template_tasks returns all tasks in order", %{job: job} do
     tasks = BuildTask.find_template_tasks(job)
-    assert elem(tasks, 0).order == 1
+    assert Enum.at(tasks, 0).order == 1
+    assert Enum.at(tasks, 1).order == 2
+    assert Enum.at(tasks, 2).order == 3
   end
 end
