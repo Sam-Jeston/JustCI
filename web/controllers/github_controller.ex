@@ -15,6 +15,7 @@ defmodule JustCi.GithubController do
 
       build_query = from b in Build,
         where: b.repo == ^repo
+
       build = Repo.all(build_query)
 
       build_match = length build
@@ -27,8 +28,6 @@ defmodule JustCi.GithubController do
 
       set_pending_status(repo, owner, test_sha)
 
-      # TODO: When we start the job, store the repo, test_sha and owner in the db
-      # for easy reference when we go to set it to failed or passed
       builder = Enum.at(build, 0)
       BuilWorker.start(build, test_sha, owner)
     end
@@ -65,6 +64,7 @@ defmodule JustCi.GithubController do
   end
 
   # TODO: It will be better to use an access token here
+  # TODO: Refactor to pass in the Tentacat Dep for improved testing
   defp set_pending_status(repo, owner, sha) do
     password = System.get_env("GITHUB_PASSWORD")
     client = Tentacat.Client.new(%{user: "Sam-Jeston", password: password})

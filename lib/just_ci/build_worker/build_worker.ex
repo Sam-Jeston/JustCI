@@ -1,5 +1,7 @@
 defmodule JustCi.BuildWorker do
   import Plug.Conn
+
+  alias JustCi.Repo
   alias JustCi.Job
 
   def start(build, sha, owner) do
@@ -24,7 +26,7 @@ defmodule JustCi.BuildWorker do
       log: "Not yet created"
     })
 
-    case JustCi.Job.create(changeset, JustCi.Repo) do
+    case Repo.insert changeset do
       {:ok, changeset} ->
         changeset
       {:error, changeset} ->

@@ -18,5 +18,6 @@ defmodule JustCi.Job do
     struct
     |> cast(params, [:status, :log, :sha, :owner, :build_id])
     |> validate_required([:status, :log, :sha, :owner, :build_id])
+    |> foreign_key_constraint(:build_id)
   end
 end
