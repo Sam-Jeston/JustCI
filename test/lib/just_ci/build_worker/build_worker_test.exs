@@ -7,7 +7,6 @@ defmodule JustCi.BuildWorkerTest do
   alias JustCi.Repo
   alias JustCi.Build
   alias JustCi.Template
-  alias JustCi.Job
 
   setup do
     template_changeset = Template.changeset(%Template{}, %{name: "some content"})

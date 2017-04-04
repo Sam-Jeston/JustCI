@@ -15,4 +15,11 @@ defmodule JustCi.BuildRegistryTest do
     JustCi.BuildManager.push(manager, %{job_id: 1})
     assert JustCi.BuildManager.get_jobs(manager) == [%{job_id: 1}]
   end
+
+  test "removes buckets on exit", %{registry: registry} do
+    JustCi.BuildRegistry.create(registry, "manager")
+    {:ok, manager} = JustCi.BuildRegistry.lookup(registry, "manager")
+    Agent.stop(manager)
+    assert JustCi.BuildRegistry.lookup(registry, "manager") == :error
+  end
 end
