@@ -24,7 +24,6 @@ defmodule JustCi.BuildManager do
   Removes a completed job from the build manager
   """
   def remove(job) do
-    IO.inspect job
     Agent.update(:build_manager, &Enum.filter(&1, fn(x) -> x != job end))
   end
 end
