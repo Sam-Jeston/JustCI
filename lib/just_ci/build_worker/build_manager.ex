@@ -10,23 +10,21 @@ defmodule JustCi.BuildManager do
   Gets active jobs within the build manager
   """
   def get_jobs do
-    Agent.get(:build_manager, fn list -> list end)
+    Agent.get(:build_manager, &(&1))
   end
 
   @doc """
-  Pushes a new job into the agent.
+  Pushes a new job into the build manager.
   """
   def push(job) do
-    Agent.update(:build_manager, fn list -> [job|list] end)
+    Agent.update(:build_manager, &([job|&1]))
   end
 
   @doc """
   Removes a completed job from the build manager
   """
   def remove(job) do
-    Agent.get_and_update(:build_manager, fn
-      []    -> {:ok, []}
-      list -> {:ok, fn list -> Enum.filter(list, fn(x) -> x != job end) end}
-    end)
+    IO.inspect job
+    Agent.update(:build_manager, &Enum.filter(&1, fn(x) -> x != job end))
   end
 end
