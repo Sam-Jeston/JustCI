@@ -20,7 +20,7 @@ defmodule JustCi.Mixfile do
   def application do
     [mod: {JustCi, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :tentacat]]
+                    :phoenix_ecto, :postgrex, :tentacat, :porcelain]]
   end
 
   # Specifies which paths to compile per environment.
@@ -40,7 +40,8 @@ defmodule JustCi.Mixfile do
      {:comeonin, "~> 3.0.2"},
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
-     {:tentacat, "~> 0.5"}]
+     {:tentacat, "~> 0.5"},
+     {:porcelain, "~> 2.0"}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

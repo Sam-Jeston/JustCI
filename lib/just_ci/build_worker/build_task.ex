@@ -1,14 +1,19 @@
 defmodule JustCi.BuildTask do
   alias JustCi.Repo
   alias JustCi.Job
+  alias Porcelain.Result
   import Ecto.Query
 
   @doc """
   Starts a build task.
   Returns {:ok, job: job}
   """
-  def run do
+  def run job do
+    tasks = find_template_tasks job
 
+    # Iterate over each task
+    # Call execute... On success, call next task or finish job and write log
+                  #   On failure, fail job and write log
   end
 
   @doc """
@@ -32,7 +37,10 @@ defmodule JustCi.BuildTask do
   @doc """
   Runs the task command provided in the shell of the host machine
   """
-  def execute do
+  def execute command do
+    %Result{out: output, status: status} = Porcelain.shell(command)
 
+    # Update the log field on the job (maybe we log to ETS against jobId....)
+    # return the result from procelain shelll
   end
 end

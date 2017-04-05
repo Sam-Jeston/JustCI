@@ -57,4 +57,8 @@ defmodule JustCi.BuildTaskTest do
     assert Enum.at(tasks, 1).order == 2
     assert Enum.at(tasks, 2).order == 3
   end
+
+  test "execute runs the command and appends it to the correct job log" do
+    BuildTask.execute("echo \"Hello world!\"")
+  end
 end
