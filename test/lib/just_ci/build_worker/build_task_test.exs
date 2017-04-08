@@ -59,6 +59,8 @@ defmodule JustCi.BuildTaskTest do
   end
 
   test "execute runs the command and appends it to the correct job log" do
-    BuildTask.execute("echo \"Hello world!\"")
+    {build_status, message} = BuildTask.execute("echo \"Hello world!\"")
+    assert build_status == 0
+    assert message == "Hello world!\n"
   end
 end
