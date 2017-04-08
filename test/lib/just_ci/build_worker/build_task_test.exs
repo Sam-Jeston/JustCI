@@ -2,6 +2,7 @@ defmodule JustCi.BuildTaskTest do
   use JustCi.ConnCase
 
   alias JustCi.BuildWorker
+  alias JustCi.JobLog
   alias JustCi.Repo
   alias JustCi.Build
   alias JustCi.Template
@@ -58,5 +59,25 @@ defmodule JustCi.BuildTaskTest do
     assert Enum.at(tasks, 0).order == 1
     assert Enum.at(tasks, 1).order == 2
     assert Enum.at(tasks, 2).order == 3
+  end
+
+  test "aggregate log correctly reduces job logs to a single entry", %{job: job} do
+    job_log_1_changeset = JobLog.changeset(%JobLog{}, %{
+      entry: "hello one\n",
+      job_id: job.id
+    })
+
+    job_log_2_changeset = JobLog.changeset(%JobLog{}, %{
+      entry: "hello two\n",
+      job_id: job.id
+    })
+
+    Repo.insert! job_log_1_changeset
+    Repo.insert! job_log_2_changeset
+
+    aggregate_log = BuildTask.aggregate_log(job.id)
+    expected_result = "hello one\nhello two\n"
+
+    assert expected_result == aggregate_log
   end
 end

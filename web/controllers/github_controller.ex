@@ -3,6 +3,7 @@ defmodule JustCi.GithubController do
 
   alias JustCi.Build
   alias JustCi.BuildWorker
+  alias JustCi.GithubStatus
 
   def start_job(conn, params) do
     headers = conn.req_headers
@@ -26,7 +27,7 @@ defmodule JustCi.GithubController do
         |> json(%{message: "No matching build"})
       end
 
-      set_pending_status(repo, owner, test_sha)
+      GithubStatus.set_pending_status(repo, owner, test_sha)
 
       builder = Enum.at(build, 0)
       BuildWorker.start(builder, test_sha, owner)
@@ -61,21 +62,5 @@ defmodule JustCi.GithubController do
 
   defp valid_action?(action) do
     !String.equivalent?(action, "closed")
-  end
-
-  # TODO: It will be better to use an access token here
-  # TODO: Refactor to pass in the Tentacat Dep for improved testing
-  defp set_pending_status(repo, owner, sha) do
-    password = System.get_env("GITHUB_PASSWORD")
-    client = Tentacat.Client.new(%{user: "Sam-Jeston", password: password})
-
-    comment_body = %{
-     "state": "pending",
-     "target_url": "https://willLinkBackToActualCIBuild.com/build/status",
-     "description": "About to start the build!",
-     "context": "continuous-integration/JustCi"
-    }
-
-    Tentacat.Repositories.Statuses.create(owner, repo, sha, comment_body, client)
   end
 end

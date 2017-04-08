@@ -4,10 +4,18 @@ defmodule JustCi.BuildWorker do
   alias JustCi.Repo
   alias JustCi.Job
   alias JustCi.BuildTask
+  alias JustCi.GithubStatus
 
   def start(build, sha, owner) do
-    IO.inspect build
     job = create_job(build.id, sha, owner)
+    job_id = job.id
+
+    # TODO: Figure out how to preload the build on create to prevent this stupid
+    # second lookup
+    job = Job
+    |> Repo.get(job_id)
+    |> Repo.preload(:build)
+
     BuildTask.run(job)
   end
 

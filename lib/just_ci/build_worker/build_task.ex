@@ -4,6 +4,7 @@ defmodule JustCi.BuildTask do
   alias JustCi.Build
   alias JustCi.ThirdPartyKey
   alias JustCi.JobLog
+  alias JustCi.GithubStatus
   alias Porcelain.Result
   import Ecto.Query
 
@@ -87,8 +88,6 @@ defmodule JustCi.BuildTask do
   Stores a single task commands log result against a job
   """
   def store_log(output, job_id) do
-    IO.inspect output
-    IO.inspect job_id
     changeset = JobLog.changeset(%JobLog{}, %{
       job_id: job_id,
       entry: output
@@ -114,12 +113,14 @@ defmodule JustCi.BuildTask do
 
     log = aggregate_log(job.id)
 
-    changeset = JobLog.changeset(job, %{
+    changeset = Job.changeset(job, %{
       status: status,
       log: log
     })
 
-    case Repo.insert changeset do
+    remove_job_logs(job.id)
+
+    case Repo.update changeset do
       {:ok, changeset} ->
         changeset
       {:error, changeset} ->
@@ -127,6 +128,11 @@ defmodule JustCi.BuildTask do
     end
 
     job_cleanup(target_path)
+
+    case exit_status do
+      0 -> GithubStatus.set_passed_status(job.build.repo, job.owner, job.sha)
+      _ -> GithubStatus.set_failed_status(job.build.repo, job.owner, job.sha)
+    end
   end
 
   @doc """
@@ -139,13 +145,23 @@ defmodule JustCi.BuildTask do
     |> order_by([j], [asc: j.id])
     |> Repo.all
 
-    Enum.reduce(log_entries, "", fn(l, acc) -> acc <> l end)
+    Enum.reduce(log_entries, "", fn(l, acc) -> acc <> l.entry end)
   end
 
   @doc """
-  Removes the job folder
+  Removes all logs associated with a job
+  """
+  def remove_job_logs(job_id) do
+    JobLog
+    |> where([j], j.job_id == ^job_id)
+    |> Repo.delete_all
+  end
+
+  @doc """
+  Removes the job contents of the folder
   """
   def job_cleanup(target_path) do
+    # TODO: Update this cleanup to remove the build folder as well
     Porcelain.shell("rm -rf " <> target_path)
   end
 end
