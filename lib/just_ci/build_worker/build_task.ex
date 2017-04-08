@@ -1,6 +1,7 @@
 defmodule JustCi.BuildTask do
   alias JustCi.Repo
   alias JustCi.Job
+  alias JustCi.Build
   alias JustCi.ThirdPartyKey
   alias JustCi.JobLog
   alias Porcelain.Result
@@ -39,7 +40,9 @@ defmodule JustCi.BuildTask do
   def clone_repository(job, tasks) do
     job_path = "~/Builds/" <> Integer.to_string job.id
     key_path = job_path <> "/ssh-key"
-    cloner = "git@github.com:" <> job.owner <> "/" <> job.build.repo <>".git"
+
+    build = Repo.get(Build, job.build_id)
+    cloner = "git@github.com:" <> job.owner <> "/" <> build.repo <>".git"
 
     Porcelain.shell("mkdir -p " <> job_path)
 
@@ -47,23 +50,29 @@ defmodule JustCi.BuildTask do
     |> where([k], k.entity == "github")
     |> Repo.one
 
-    Porcelain.shell("touch " <> job_path <> "/ssh-key")
-    Porcelain.shell("eval \"$(ssh-agent -s)\"")
-    Porcelain.shell("ssh-add " <> key_path)
+    #############################
+    # TODO: These steps are right, but getting passphrase prompt on os x
+    # Porcelain.shell("touch " <> key_path)
+    # Porcelain.shell("chmod 400 " <> key_path)
+    # Porcelain.shell("eval \"$(ssh-agent -s)\"")
+    # Porcelain.shell("ssh-add " <> key_path)
+
     Porcelain.shell("cd " <> job_path <> " && git clone " <> cloner)
 
-    execute(0, tasks, job, job_path)
+    execute(0, tasks, job, job_path <> "/" <> build.repo)
   end
 
   # We will use recursion with guards to handle 0 code
   def execute(previous_status, tasks, job, target_path) when previous_status == 0 do
     [ current_task | remaining_tasks ] = tasks
-    cmd = "cd " <> target_path <> " && " <> current_task.command
+    IO.inspect target_path
+    IO.inspect "cd " <> target_path <> "; " <> current_task.command <> ";"
+    cmd = "cd " <> target_path <> "; " <> current_task.command
     %Result{out: output, status: status} = Porcelain.shell(cmd)
 
     store_log(output, job.id)
 
-    case Enum.length remaining_tasks do
+    case length remaining_tasks do
       0 -> finish_job(status, job, target_path)
       _ -> execute(status, remaining_tasks, job, target_path)
     end
@@ -78,6 +87,8 @@ defmodule JustCi.BuildTask do
   Stores a single task commands log result against a job
   """
   def store_log(output, job_id) do
+    IO.inspect output
+    IO.inspect job_id
     changeset = JobLog.changeset(%JobLog{}, %{
       job_id: job_id,
       entry: output

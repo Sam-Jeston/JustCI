@@ -2,7 +2,7 @@ defmodule JustCi.GithubController do
   use JustCi.Web, :controller
 
   alias JustCi.Build
-  alias JustCi.BuilWorker
+  alias JustCi.BuildWorker
 
   def start_job(conn, params) do
     headers = conn.req_headers
@@ -29,7 +29,7 @@ defmodule JustCi.GithubController do
       set_pending_status(repo, owner, test_sha)
 
       builder = Enum.at(build, 0)
-      BuilWorker.start(build, test_sha, owner)
+      BuildWorker.start(builder, test_sha, owner)
     end
 
     send_resp(conn, :no_content, "")

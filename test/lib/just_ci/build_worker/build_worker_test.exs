@@ -27,4 +27,8 @@ defmodule JustCi.BuildWorkerTest do
       BuildWorker.create_job(99999999, "githubSha", "RonWeasley")
     end
   end
+
+  test "aggregate log correctly reduces job logs to a single entry" do
+    assert 1 == 2
+  end
 end

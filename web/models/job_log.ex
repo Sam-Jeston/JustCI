@@ -2,7 +2,7 @@ defmodule JustCi.JobLog do
   use JustCi.Web, :model
 
   schema "job_logs" do
-    field :entry, :string
+    field :entry, :string, size: 100000
     belongs_to :job, JustCi.Job
 
     timestamps()
@@ -13,8 +13,8 @@ defmodule JustCi.JobLog do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:entry])
-    |> validate_required([:entry])
+    |> cast(params, [:entry, :job_id])
+    |> validate_required([:entry, :job_id])
     |> foreign_key_constraint(:job_id)
   end
 end

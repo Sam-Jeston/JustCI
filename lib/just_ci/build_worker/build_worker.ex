@@ -6,6 +6,7 @@ defmodule JustCi.BuildWorker do
   alias JustCi.BuildTask
 
   def start(build, sha, owner) do
+    IO.inspect build
     job = create_job(build.id, sha, owner)
     BuildTask.run(job)
   end

@@ -3,7 +3,7 @@ defmodule JustCi.Repo.Migrations.CreateJobLog do
 
   def change do
     create table(:job_logs) do
-      add :entry, :string
+      add :entry, :string, size: 100000
       add :job_id, references(:jobs, on_delete: :nothing)
 
       timestamps()

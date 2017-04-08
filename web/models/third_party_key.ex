@@ -3,7 +3,7 @@ defmodule JustCi.ThirdPartyKey do
 
   schema "third_party_keys" do
     field :entity, :string
-    field :key, :string
+    field :key, :string, size: 10000
 
     timestamps()
   end

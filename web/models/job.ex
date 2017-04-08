@@ -3,7 +3,7 @@ defmodule JustCi.Job do
 
   schema "jobs" do
     field :status, :string
-    field :log, :string
+    field :log, :string, size: 1000000
     field :sha, :string
     field :owner, :string
     belongs_to :build, JustCi.Build
