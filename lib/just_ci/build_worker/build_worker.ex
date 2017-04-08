@@ -3,18 +3,11 @@ defmodule JustCi.BuildWorker do
 
   alias JustCi.Repo
   alias JustCi.Job
+  alias JustCi.BuildTask
 
   def start(build, sha, owner) do
-    create_job(build.id, sha, owner)
-
-    # This should also be managed by the Agent
-    # 1. Create a new job entry
-    # 2. Start the job (Elixir.Task)
-    # 3. Push it to the Agent for reference
-  end
-
-  def implement_job do
-
+    job = create_job(build.id, sha, owner)
+    BuildTask.run(job)
   end
 
   def create_job(build_id, sha, owner) do

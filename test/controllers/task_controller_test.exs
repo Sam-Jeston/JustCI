@@ -5,7 +5,7 @@ defmodule JustCi.TaskControllerTest do
   alias JustCi.Template
 
   @valid_template_attrs %{name: "some template"}
-  @valid_attrs %{command: "some content", description: "some content"}
+  @valid_attrs %{command: "some content"}
 
   setup do
     changeset = Template.changeset(%Template{}, @valid_template_attrs)

@@ -3,7 +3,6 @@
 <table class="table">
   <thead>
     <tr>
-      <th>Description</th>
       <th>Command</th>
       <th>Template</th>
 
@@ -13,7 +12,6 @@
   <tbody>
 <%= for task <- @tasks do %>
     <tr>
-      <td><%= task.description %></td>
       <td><%= task.command %></td>
       <td><%= task.template_id %></td>
 

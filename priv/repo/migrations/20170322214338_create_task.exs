@@ -3,7 +3,6 @@ defmodule JustCi.Repo.Migrations.CreateTask do
 
   def change do
     create table(:tasks) do
-      add :description, :string
       add :command, :string
       add :order, :integer, default: 1
       add :template_id, references(:templates, on_delete: :nothing)

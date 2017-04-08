@@ -5,9 +5,7 @@
     <div class="panel panel-default" task_id="<%= task.id %>">
       <div class="panel-body">
         <span class="grippy"></span>
-        <b><%= task.description %></b>:
-        <%= task.command %>
-        order: <%= task.order %>
+        <b><%= task.command %></b>
         <div style="float:right">
           <%= link "Edit", to: task_path(@conn, :edit, task), class: "btn btn-xs" %>
           <%= link "Delete", to: task_path(@conn, :delete, task), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>

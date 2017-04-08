@@ -1,23 +1,17 @@
 defmodule JustCi.BuildTask do
   alias JustCi.Repo
   alias JustCi.Job
+  alias JustCi.ThirdPartyKey
+  alias JustCi.JobLog
   alias Porcelain.Result
   import Ecto.Query
 
   @doc """
   Starts a build task.
-  Returns {:ok, job: job}
   """
   def run job do
-    # TODO: The first step on any repository needs to be a git clone of the
-    # repo in question. Clearly some SSH mechanisms will be required, and the use
-    # of a UUID to store the code in
-
     tasks = find_template_tasks job
-
-    Enum.each(tasks, fn t ->
-      {status, output} = Task.async(JustCi.BuildTask, :execute, t.command)
-    end)
+    Task.start(JustCi.BuildTask, :clone_repository, [job, tasks])
   end
 
   @doc """
@@ -41,50 +35,106 @@ defmodule JustCi.BuildTask do
   @doc """
   Stores a single task commands log result against a job
   """
-  def clone_repository do
-    # Need to store the private key in a table somewhere
+  # We should be able to handle other providers here, through guards for BB etc
+  def clone_repository(job, tasks) do
+    job_path = "~/Builds/" <> Integer.to_string job.id
+    key_path = job_path <> "/ssh-key"
+    cloner = "git@github.com:" <> job.owner <> "/" <> job.build.repo <>".git"
+
+    Porcelain.shell("mkdir -p " <> job_path)
+
+    key = ThirdPartyKey
+    |> where([k], k.entity == "github")
+    |> Repo.one
+
+    Porcelain.shell("touch " <> job_path <> "/ssh-key")
+    Porcelain.shell("eval \"$(ssh-agent -s)\"")
+    Porcelain.shell("ssh-add " <> key_path)
+    Porcelain.shell("cd " <> job_path <> " && git clone " <> cloner)
+
+    execute(0, tasks, job, job_path)
   end
 
   # We will use recursion with guards to handle 0 code
-  def execute(previous_status, tasks, job) when previous_status == 0 do
+  def execute(previous_status, tasks, job, target_path) when previous_status == 0 do
     [ current_task | remaining_tasks ] = tasks
-    %Result{out: output, status: status} = Porcelain.shell(current_task.command)
+    cmd = "cd " <> target_path <> " && " <> current_task.command
+    %Result{out: output, status: status} = Porcelain.shell(cmd)
 
     store_log(output, job.id)
 
     case Enum.length remaining_tasks do
-      0 -> finish_job(status, job)
-      _ -> execute(status, remaining_tasks, job)
+      0 -> finish_job(status, job, target_path)
+      _ -> execute(status, remaining_tasks, job, target_path)
     end
   end
 
   # This method will match when the previous status is not equal to 0
-  def execute(previous_status, tasks, job) do
-    finish_job(previous_status, job)
+  def execute(previous_status, tasks, job, target_path) do
+    finish_job(previous_status, job, target_path)
   end
 
   @doc """
   Stores a single task commands log result against a job
   """
   def store_log(output, job_id) do
+    changeset = JobLog.changeset(%JobLog{}, %{
+      job_id: job_id,
+      entry: output
+    })
+
+    case Repo.insert changeset do
+      {:ok, changeset} ->
+        changeset
+      {:error, changeset} ->
+        raise RuntimeError, message: "There was a problem storing a jobs log"
+    end
   end
 
   @doc """
   Finish job will handle the aggregation and and cleanup of the job
   """
-  def finish_job(exit_status, job) do
+  def finish_job(exit_status, job, target_path) do
+    status =
+      case exit_status do
+        0 -> "passed"
+        _ -> "failed"
+      end
+
+    log = aggregate_log(job.id)
+
+    changeset = JobLog.changeset(job, %{
+      status: status,
+      log: log
+    })
+
+    case Repo.insert changeset do
+      {:ok, changeset} ->
+        changeset
+      {:error, changeset} ->
+        raise RuntimeError, message: "There was a problem finishing the job"
+    end
+
+    job_cleanup(target_path)
   end
 
   @doc """
   Returns the log entries for a job, deletes them and aggregates the result
   into the job entry
   """
-  def aggregate_log do
+  def aggregate_log(job_id) do
+    log_entries = JobLog
+    |> where([j], j.job_id == ^job_id)
+    |> order_by([j], [asc: j.id])
+    |> Repo.all
+
+    Enum.reduce(log_entries, "", fn(l, acc) -> acc <> l end)
   end
 
   @doc """
   Removes the job folder
   """
-  def job_cleanup do
+  def job_cleanup(target_path) do
+    Porcelain.shell("rm -rf " <> target_path)
   end
 end

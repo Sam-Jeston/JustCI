@@ -45,6 +45,8 @@ defmodule JustCi.BuildTaskTest do
     {:ok, job: job}
   end
 
+  # This spec is going to attempt a git clone, so maybe we go in from the point of
+  # execute instead
   test "run completes the job and updates its status to completed", %{job: job} do
   end
 
@@ -56,11 +58,5 @@ defmodule JustCi.BuildTaskTest do
     assert Enum.at(tasks, 0).order == 1
     assert Enum.at(tasks, 1).order == 2
     assert Enum.at(tasks, 2).order == 3
-  end
-
-  test "execute runs the command and appends it to the correct job log" do
-    {build_status, message} = BuildTask.execute("echo \"Hello world!\"")
-    assert build_status == 0
-    assert message == "Hello world!\n"
   end
 end

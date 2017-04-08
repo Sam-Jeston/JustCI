@@ -2,7 +2,6 @@ defmodule JustCi.Task do
   use JustCi.Web, :model
 
   schema "tasks" do
-    field :description, :string
     field :command, :string
     field :order, :integer
     belongs_to :template, JustCi.Template
@@ -15,8 +14,8 @@ defmodule JustCi.Task do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:description, :command, :template_id, :order])
+    |> cast(params, [:command, :template_id, :order])
     |> assoc_constraint(:template)
-    |> validate_required([:description, :command])
+    |> validate_required([:command])
   end
 end

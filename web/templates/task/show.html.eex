@@ -3,11 +3,6 @@
 <ul>
 
   <li>
-    <strong>Description:</strong>
-    <%= @task.description %>
-  </li>
-
-  <li>
     <strong>Command:</strong>
     <%= @task.command %>
   </li>
