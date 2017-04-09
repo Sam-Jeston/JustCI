@@ -16,9 +16,12 @@ import $ from 'jquery'
 import 'jquery-ui-bundle'
 
 import { orderTasks } from './templates/task_order'
+import { showBuild } from './home/show_build'
 
 export function App () {
+  // Apply the jQuery listeners the application uses
   orderTasks()
+  showBuild()
 }
 
 // Import local files

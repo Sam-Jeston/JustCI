@@ -25,7 +25,7 @@ defmodule JustCi.PageController do
           _ -> Enum.at(b.jobs, 0).status
         end
 
-      %{status: status, repo: b.repo}
+      %{id: b.id, status: status, repo: b.repo}
     end)
 
     render conn, "index.html", build_views: build_views

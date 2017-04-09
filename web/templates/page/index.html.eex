@@ -1,6 +1,10 @@
+<h1>Your CI</h1>
+
 <%= for build <- @build_views do %>
-    <p>
-      <span><%= build.repo %></span>
-      <span><%= build.status %></span>
-    </p>
+  <div class="ciBuild panel panel-default" style="cursor:pointer" build_id="<%= build.id %>">
+    <div class="panel-body">
+      <b><span><%= build.repo %></span></b>
+      <span style="float:right"><%= build.status %></span>
+    </div>
+  </div>
 <% end %>
