@@ -1,11 +1,81 @@
-# Script for populating the database. You can run it as:
-#
-#     mix run priv/repo/seeds.exs
-#
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     JustCi.Repo.insert!(%JustCi.SomeModel{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+# Script for populating the database. You can run it as: mix run priv/repo/seeds.exs
+
+alias JustCi.User
+alias JustCi.Repo
+alias JustCi.Registration
+alias JustCi.Template
+alias JustCi.Task
+alias JustCi.Build
+alias JustCi.Job
+
+user_changeset = User.changeset(%User{}, %{
+  email: "test@test.com",
+  password: "password"
+})
+
+Registration.create(user_changeset, Repo)
+
+template_1 = Template.changeset(%Template{}, %{ name: "Test Temp 1" })
+template_2 = Template.changeset(%Template{}, %{ name: "Test Temp 2" })
+
+t1 = Repo.insert! template_1
+t2 = Repo.insert! template_2
+
+task_1 = Task.changeset(%Task{}, %{
+  template_id: t1.id,
+  command: "echo \"Hello,\"",
+  order: 1
+})
+
+task_2 = Task.changeset(%Task{}, %{
+  template_id: t1.id,
+  command: "echo \"Goodbye,\"",
+  order: 2
+})
+
+task_3 = Task.changeset(%Task{}, %{
+  template_id: t2.id,
+  command: "echo \"Near,\"",
+  order: 1
+})
+
+task_4 = Task.changeset(%Task{}, %{
+  template_id: t2.id,
+  command: "echo \"Far,\"",
+  order: 2
+})
+
+Repo.insert! task_1
+Repo.insert! task_2
+Repo.insert! task_3
+Repo.insert! task_4
+
+build_1 = Build.changeset(%Build{}, %{
+  repo: "test1",
+  template_id: t1.id
+})
+
+build_2 = Build.changeset(%Build{}, %{
+  repo: "test2",
+  template_id: t2.id
+})
+
+b1 = Repo.insert! build_1
+Repo.insert! build_2
+
+job_1 = Job.changeset(%Job{}, %{
+  status: "pending",
+  sha: "abcde",
+  owner: "Joe-Bloggs",
+  build_id: b1.id
+})
+
+job_2 = Job.changeset(%Job{}, %{
+  status: "success",
+  sha: "abcde",
+  owner: "Joe-Bloggs",
+  build_id: b1.id
+})
+
+Repo.insert! job_1
+Repo.insert! job_2

@@ -4,6 +4,7 @@ defmodule JustCi.Build do
   schema "builds" do
     field :repo, :string
     belongs_to :template, JustCi.Template
+    has_many :jobs, JustCi.Job
 
     timestamps()
   end

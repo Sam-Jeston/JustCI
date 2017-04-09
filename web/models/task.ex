@@ -17,5 +17,6 @@ defmodule JustCi.Task do
     |> cast(params, [:command, :template_id, :order])
     |> assoc_constraint(:template)
     |> validate_required([:command])
+    |> foreign_key_constraint(:template_id)
   end
 end

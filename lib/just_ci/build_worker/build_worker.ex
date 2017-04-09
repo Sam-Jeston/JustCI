@@ -24,8 +24,7 @@ defmodule JustCi.BuildWorker do
       build_id: build_id,
       sha: sha,
       owner: owner,
-      status: "pending",
-      log: "Not yet created"
+      status: "pending"
     })
 
     case Repo.insert changeset do
