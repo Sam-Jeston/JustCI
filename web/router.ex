@@ -17,7 +17,7 @@ defmodule JustCi.Router do
   scope "/", JustCi do
     pipe_through :browser # Use the default browser stack
 
-    get "/", PageController, :index
+    get "/", HomeController, :index
     resources "/templates", TemplateController do
       resources "/tasks", TaskController
     end

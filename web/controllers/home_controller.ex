@@ -1,4 +1,4 @@
-defmodule JustCi.PageController do
+defmodule JustCi.HomeController do
   use JustCi.Web, :controller
   alias JustCi.Build
 

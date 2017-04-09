@@ -22,7 +22,7 @@
         <%= if logged_in?(@conn) do %>
           <nav class="navbar navbar-default">
             <ul class="nav navbar-nav">
-              <li><a href="<%= page_path(@conn, :index) %>">Home</a></li>
+              <li><a href="<%= home_path(@conn, :index) %>">Home</a></li>
               <li><a href="<%= build_path(@conn, :index) %>">Builds</a></li>
               <li><a href="<%= template_path(@conn, :index) %>">Templates</a></li>
               <li><a href="<%= settings_path(@conn, :index) %>">Settings</a></li>
