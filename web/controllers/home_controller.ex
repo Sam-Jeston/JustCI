@@ -30,4 +30,43 @@ defmodule JustCi.HomeController do
 
     render conn, "index.html", build_views: build_views
   end
+
+  def show(conn, %{"id" => id}) do
+    build_with_jobs = Build
+    |> where([b], b.id == ^id)
+    |> join(:left, [b], jobs in assoc(b, :jobs))
+    |> order_by([b, jobs], [desc: jobs.updated_at])
+    |> limit([jobs], 1)
+    |> preload([b, jobs], [jobs: jobs])
+    |> Repo.one
+
+    # Lookup logs for job depending on state
+
+    render conn, "show.html", build: build_with_jobs
+  end
+
+  def history(conn, %{"id" => id}) do
+    build_with_jobs = Build
+    |> where([b], b.id == ^id)
+    |> join(:left, [b], jobs in assoc(b, :jobs))
+    |> order_by([b, jobs], [desc: jobs.updated_at])
+    |> limit([jobs], 10)
+    |> preload([b, jobs], [jobs: jobs])
+    |> Repo.one
+
+    render conn, "history.html", build: build_with_jobs
+  end
+
+  # TODO: Will require an addition to Job to store branch
+  def branches(conn, %{"id" => id}) do
+    build_with_jobs = Build
+    |> where([b], b.id == ^id)
+    |> join(:left, [b], jobs in assoc(b, :jobs))
+    |> order_by([b, jobs], [desc: jobs.updated_at])
+    |> limit([jobs], 10)
+    |> preload([b, jobs], [jobs: jobs])
+    |> Repo.one
+
+    render conn, "branches.html", build: build_with_jobs
+  end
 end

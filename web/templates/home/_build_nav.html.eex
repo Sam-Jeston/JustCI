@@ -1,0 +1,13 @@
+<h2><%= @build.repo %></h2>
+<!-- TODO: I'm sure there is a nicer option than this -->
+<ul class="nav nav-tabs">
+  <li role="presentation" class="<%= if (@active == "recent"), do: "active"%>">
+    <a href="/ci/<%= @build.id %>">Most Recent</a>
+  </li>
+  <li role="presentation" class="<%= if (@active == "history"), do: "active"%>">
+    <a href="/ci/<%= @build.id %>/history">History</a>
+  </li>
+  <li role="presentation" class="<%= if (@active == "branches"), do: "active"%>">
+    <a href="/ci/<%= @build.id %>/branches">Branches</a>
+  </li>
+</ul>

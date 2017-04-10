@@ -1,0 +1,2 @@
+<%= render JustCi.HomeView, "_build_nav.html", build: @build, active: "history" %>
+TODO: History
