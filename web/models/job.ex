@@ -3,6 +3,7 @@ defmodule JustCi.Job do
 
   schema "jobs" do
     field :status, :string
+    field :branch, :string
     field :log, :string, size: 1000000
     field :sha, :string
     field :owner, :string
@@ -16,8 +17,8 @@ defmodule JustCi.Job do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:status, :log, :sha, :owner, :build_id])
-    |> validate_required([:status, :sha, :owner, :build_id])
+    |> cast(params, [:status, :log, :sha, :owner, :build_id, :branch])
+    |> validate_required([:status, :sha, :owner, :build_id, :branch])
     |> foreign_key_constraint(:build_id)
   end
 end

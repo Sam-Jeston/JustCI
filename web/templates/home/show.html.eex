@@ -1,2 +1,6 @@
 <%= render JustCi.HomeView, "_build_nav.html", build: @build, active: "recent" %>
-TODO: most recent
+<p>Branch: <%= @job.branch %></p>
+<p>Log: </p>
+<%= for log <- @logs do %>
+  <p><%= log %></p>
+<% end %>

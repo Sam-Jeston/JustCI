@@ -6,8 +6,8 @@ defmodule JustCi.BuildWorker do
   alias JustCi.BuildTask
   alias JustCi.GithubStatus
 
-  def start(build, sha, owner) do
-    job = create_job(build.id, sha, owner)
+  def start(build, sha, owner, branch) do
+    job = create_job(build.id, sha, owner, branch)
     job_id = job.id
 
     # TODO: Figure out how to preload the build on create to prevent this stupid
@@ -19,12 +19,13 @@ defmodule JustCi.BuildWorker do
     BuildTask.run(job)
   end
 
-  def create_job(build_id, sha, owner) do
+  def create_job(build_id, sha, owner, branch) do
     changeset = Job.changeset(%Job{}, %{
       build_id: build_id,
       sha: sha,
       owner: owner,
-      status: "pending"
+      status: "pending",
+      branch: branch
     })
 
     case Repo.insert changeset do

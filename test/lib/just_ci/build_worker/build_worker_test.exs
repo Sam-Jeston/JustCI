@@ -19,12 +19,12 @@ defmodule JustCi.BuildWorkerTest do
   end
 
   test "create job succeeds when the changeset is valid", %{build: build} do
-    assert BuildWorker.create_job(build.id, "githubSha", "RonWeasley")
+    assert BuildWorker.create_job(build.id, "githubSha", "RonWeasley", "master")
   end
 
   test "create job fails when the changeset is invalid" do
     assert_raise RuntimeError, "There was a problem creating the job", fn ->
-      BuildWorker.create_job(99999999, "githubSha", "RonWeasley")
+      BuildWorker.create_job(99999999, "githubSha", "RonWeasley", "master")
     end
   end
 end

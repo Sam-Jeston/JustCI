@@ -13,6 +13,7 @@ defmodule JustCi.GithubController do
 
     if valid_event?(github_event) && valid_action?(params["action"]) do
       { repo, test_sha, owner } = assign_repo_vals(github_event, params)
+      branch = GithubStatus.branch_name(test_sha)
 
       build_query = from b in Build,
         where: b.repo == ^repo
@@ -30,7 +31,7 @@ defmodule JustCi.GithubController do
       GithubStatus.set_pending_status(repo, owner, test_sha)
 
       builder = Enum.at(build, 0)
-      BuildWorker.start(builder, test_sha, owner)
+      BuildWorker.start(builder, test_sha, owner, branch)
     end
 
     send_resp(conn, :no_content, "")

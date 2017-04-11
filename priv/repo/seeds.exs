@@ -67,14 +67,17 @@ job_1 = Job.changeset(%Job{}, %{
   status: "pending",
   sha: "abcde",
   owner: "Joe-Bloggs",
-  build_id: b1.id
+  build_id: b1.id,
+  branch: "test-branch"
 })
 
 job_2 = Job.changeset(%Job{}, %{
   status: "success",
   sha: "abcde",
   owner: "Joe-Bloggs",
-  build_id: b1.id
+  build_id: b1.id,
+  branch: "master",
+  log: "We created this.\nBack when the world was flat.\n"
 })
 
 Repo.insert! job_1

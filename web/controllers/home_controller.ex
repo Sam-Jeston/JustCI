@@ -1,6 +1,7 @@
 defmodule JustCi.HomeController do
   use JustCi.Web, :controller
   alias JustCi.Build
+  alias JustCi.BuildTask
 
   def index(conn, _params) do
     # TODO: Improve this query to order_by the build with the most recent job
@@ -32,7 +33,7 @@ defmodule JustCi.HomeController do
   end
 
   def show(conn, %{"id" => id}) do
-    build_with_jobs = Build
+    build = Build
     |> where([b], b.id == ^id)
     |> join(:left, [b], jobs in assoc(b, :jobs))
     |> order_by([b, jobs], [desc: jobs.updated_at])
@@ -40,9 +41,11 @@ defmodule JustCi.HomeController do
     |> preload([b, jobs], [jobs: jobs])
     |> Repo.one
 
-    # Lookup logs for job depending on state
+    job = Enum.at(build.jobs, 0)
+    log = find_log(job)
+    logs = String.split(log, "\n")
 
-    render conn, "show.html", build: build_with_jobs
+    render conn, "show.html", build: build, job: job, logs: logs
   end
 
   def history(conn, %{"id" => id}) do
@@ -68,5 +71,13 @@ defmodule JustCi.HomeController do
     |> Repo.one
 
     render conn, "branches.html", build: build_with_jobs
+  end
+
+  def find_log(job) do
+    case job.log do
+      nil ->
+        BuildTask.aggregate_log(job.id)
+      _ -> job.log
+    end
   end
 end

@@ -41,7 +41,7 @@ defmodule JustCi.BuildTaskTest do
     build_changeset = Build.changeset(%Build{}, %{repo: "some content", template_id: template.id})
     build = Repo.insert! build_changeset
 
-    job = BuildWorker.create_job build.id, "AEBC", "JohnSnow"
+    job = BuildWorker.create_job build.id, "AEBC", "JohnSnow", "master"
 
     {:ok, job: job}
   end

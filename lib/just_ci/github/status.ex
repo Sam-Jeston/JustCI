@@ -1,7 +1,6 @@
 defmodule JustCi.GithubStatus do
   def set_pending_status(repo, owner, sha) do
-    token = System.get_env("GITHUB_TOKEN")
-    client = Tentacat.Client.new(%{access_token: token})
+    client = client_instance()
 
     comment_body = %{
      "state": "pending",
@@ -14,8 +13,7 @@ defmodule JustCi.GithubStatus do
   end
 
   def set_passed_status(repo, owner, sha) do
-    token = System.get_env("GITHUB_TOKEN")
-    client = Tentacat.Client.new(%{access_token: token})
+    client = client_instance()
 
     comment_body = %{
      "state": "success",
@@ -28,8 +26,7 @@ defmodule JustCi.GithubStatus do
   end
 
   def set_failed_status(repo, owner, sha) do
-    token = System.get_env("GITHUB_TOKEN")
-    client = Tentacat.Client.new(%{access_token: token})
+    client = client_instance()
 
     comment_body = %{
      "state": "failure",
@@ -39,5 +36,15 @@ defmodule JustCi.GithubStatus do
     }
 
     Tentacat.Repositories.Statuses.create(owner, repo, sha, comment_body, client)
+  end
+
+  # TODO: Use Tentacat to return the branch name
+  def branch_name(sha) do
+    "fake-branch"
+  end
+
+  defp client_instance do
+    token = System.get_env("GITHUB_TOKEN")
+    Tentacat.Client.new(%{access_token: token})
   end
 end

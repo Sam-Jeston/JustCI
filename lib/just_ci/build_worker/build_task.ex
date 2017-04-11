@@ -58,7 +58,10 @@ defmodule JustCi.BuildTask do
     # Porcelain.shell("eval \"$(ssh-agent -s)\"")
     # Porcelain.shell("ssh-add " <> key_path)
 
-    Porcelain.shell("cd " <> job_path <> " && git clone " <> cloner)
+    # Only clone if we aren't in local mode
+    if !System.get_env("LOCAL_MODE") do
+      Porcelain.shell("cd " <> job_path <> " && git clone " <> cloner)
+    end
 
     execute(0, tasks, job, job_path <> "/" <> build.repo)
   end

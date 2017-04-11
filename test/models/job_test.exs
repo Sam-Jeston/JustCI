@@ -8,6 +8,7 @@ defmodule JustCi.JobTest do
     owner: "some content",
     sha: "some content",
     status: "some content",
+    branch: "master",
     build_id: 1
   }
   @invalid_attrs %{}
