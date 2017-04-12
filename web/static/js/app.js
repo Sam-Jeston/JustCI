@@ -17,11 +17,13 @@ import 'jquery-ui-bundle'
 
 import { orderTasks } from './templates/task_order'
 import { showBuild } from './home/show_build'
+import { restartJob } from './home/restart_job'
 
 export function App () {
   // Apply the jQuery listeners the application uses
   orderTasks()
   showBuild()
+  restartJob()
 }
 
 // Import local files

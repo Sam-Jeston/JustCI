@@ -46,6 +46,8 @@ defmodule JustCi.Router do
 
     put "/tasks/update_order", TaskController, :update_orders
 
+    post "/ci/:build_id/restart/:job_id", HomeController, :restart_job
+
     # GitHub Integration
     post "/github/event_handler", GithubController, :start_job
   end

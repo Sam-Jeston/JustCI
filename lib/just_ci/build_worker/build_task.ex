@@ -74,7 +74,7 @@ defmodule JustCi.BuildTask do
     cmd = "cd " <> target_path <> "; " <> current_task.command
     %Result{out: output, status: status} = Porcelain.shell(cmd)
 
-    store_log(output, job.id)
+    store_log(current_task.command, output, job.id)
 
     case length remaining_tasks do
       0 -> finish_job(status, job, target_path)
@@ -90,10 +90,11 @@ defmodule JustCi.BuildTask do
   @doc """
   Stores a single task commands log result against a job
   """
-  def store_log(output, job_id) do
+  def store_log(command, output, job_id) do
+    log = command <> ":\n" <> output
     changeset = JobLog.changeset(%JobLog{}, %{
       job_id: job_id,
-      entry: output
+      entry: log
     })
 
     case Repo.insert changeset do

@@ -1,7 +1,9 @@
 defmodule JustCi.HomeController do
   use JustCi.Web, :controller
   alias JustCi.Build
+  alias JustCi.Job
   alias JustCi.BuildTask
+  alias JustCi.BuildWorker
 
   def index(conn, _params) do
     # TODO: Improve this query to order_by the build with the most recent job
@@ -71,6 +73,16 @@ defmodule JustCi.HomeController do
     |> Repo.one
 
     render conn, "branches.html", build: build_with_jobs
+  end
+
+  def restart_job(conn, %{"job_id" => job_id}) do
+    job = Job
+    |> Repo.get(job_id)
+    |> Repo.preload(:build)
+
+    BuildWorker.start(job.build, job.sha, job.owner, job.branch)
+
+    send_resp(conn, :no_content, "")
   end
 
   def find_log(job) do
