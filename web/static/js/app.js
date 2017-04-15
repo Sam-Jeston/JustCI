@@ -1,39 +1,21 @@
-// Brunch automatically concatenates all files in your
-// watched paths. Those paths can be configured at
-// config.paths.watched in "brunch-config.js".
-//
-// However, those files will only be executed if
-// explicitly imported. The only exception are files
-// in vendor, which are never wrapped in imports and
-// therefore are always executed.
-
-// Import dependencies
-//
-// If you no longer want to use a dependency, remember
-// to also remove its path from "config.paths.watched".
 import 'phoenix_html'
 import $ from 'jquery'
 import 'jquery-ui-bundle'
+import loadView from './views/loader'
+import socket from './socket'
 
-import { orderTasks } from './templates/task_order'
-import { showBuild } from './home/show_build'
-import { restartJob } from './home/restart_job'
-import { joinBuildChannel } from './socket'
+function handleDOMContentLoaded () {
+  const viewName = document.getElementsByTagName('body')[0].dataset.jsViewName
+  const ViewClass = loadView(viewName)
+  const view = new ViewClass()
+  view.mount()
 
-export function App () {
-  // Apply the jQuery listeners the application uses
-  orderTasks()
-  showBuild()
-  restartJob()
+  window.currentView = view
 }
 
-export function connectCiSocket () {
-  joinBuildChannel()
+function handleDocumentUnload () {
+  window.currentView.unmount()
 }
 
-// Import local files
-//
-// Local files can be imported directly using relative
-// paths "./socket" or full ones "web/static/js/socket".
-
-import socket from "./socket"
+window.addEventListener('DOMContentLoaded', handleDOMContentLoaded, false)
+window.addEventListener('unload', handleDocumentUnload, false)

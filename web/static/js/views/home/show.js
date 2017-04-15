@@ -1,7 +1,21 @@
+import MainView from '../main'
 const targetClass = '#restartJob'
-const csrf = document.querySelector("meta[name=csrf]").content
 
-export function restartJob () {
+export default class View extends MainView {
+  mount() {
+    super.mount()
+    restartJobListener()
+  }
+
+  unmount() {
+    super.unmount()
+    $(targetClass).unbind()
+  }
+}
+
+export function restartJobListener () {
+  const csrf = document.querySelector("meta[name=csrf]").content
+
   $(targetClass).click(() => {
     const jobId = $(targetClass).attr('job_id')
     const buildId = $(targetClass).attr('build_id')
