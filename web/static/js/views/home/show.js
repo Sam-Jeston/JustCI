@@ -1,10 +1,12 @@
 import MainView from '../main'
+import { joinBuildChannel } from '../../socket'
 const targetClass = '#restartJob'
 
 export default class View extends MainView {
   mount() {
     super.mount()
     restartJobListener()
+    joinBuildChannel()
   }
 
   unmount() {
