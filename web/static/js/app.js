@@ -18,6 +18,7 @@ import 'jquery-ui-bundle'
 import { orderTasks } from './templates/task_order'
 import { showBuild } from './home/show_build'
 import { restartJob } from './home/restart_job'
+import { joinBuildChannel } from './socket'
 
 export function App () {
   // Apply the jQuery listeners the application uses
@@ -26,9 +27,13 @@ export function App () {
   restartJob()
 }
 
+export function connectCiSocket () {
+  joinBuildChannel()
+}
+
 // Import local files
 //
 // Local files can be imported directly using relative
 // paths "./socket" or full ones "web/static/js/socket".
 
-// import socket from "./socket"
+import socket from "./socket"

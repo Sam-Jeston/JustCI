@@ -97,6 +97,9 @@ defmodule JustCi.BuildTask do
       entry: log
     })
 
+    # Ship the log to any clients listening
+    JustCi.Endpoint.broadcast("ci:lobby", "log_event", %{log: log})
+
     case Repo.insert changeset do
       {:ok, changeset} ->
         changeset

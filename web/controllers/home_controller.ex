@@ -44,8 +44,12 @@ defmodule JustCi.HomeController do
     |> Repo.one
 
     job = Enum.at(build.jobs, 0)
-    log = find_log(job)
-    logs = String.split(log, "\n")
+
+    logs =
+      case job do
+        nil -> nil
+        _ -> String.split(find_log(job), "\n")
+      end
 
     render conn, "show.html", build: build, job: job, logs: logs
   end

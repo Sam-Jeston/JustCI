@@ -2,7 +2,7 @@ defmodule JustCi.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", JustCi.RoomChannel
+  channel "ci:*", JustCi.CiChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -19,8 +19,14 @@ defmodule JustCi.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    {:ok, socket}
+  def connect(%{"token" => token}, socket) do
+    case Phoenix.Token.verify(socket, "user", token, max_age: 1209600) do
+      {:ok, user_id} ->
+        socket = assign(socket, :user, JustCi.Repo.get!(JustCi.User, user_id))
+        {:ok, socket}
+      {:error, _} ->
+        :error
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

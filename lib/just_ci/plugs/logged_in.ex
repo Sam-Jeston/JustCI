@@ -8,10 +8,12 @@ defmodule JustCi.Plugs.LoggedInRedirect do
   defp redirect(conn) do
     registration_path = String.contains?(conn.request_path, "registrations")
     already_redirected_to_login = String.contains?(conn.request_path, "login")
-    logged_in = JustCi.Session.logged_in?(conn)
+    current_user = JustCi.Session.current_user(conn)
 
-    if (!logged_in && !already_redirected_to_login && !registration_path) do
+    if (!current_user && !already_redirected_to_login && !registration_path) do
       redirect(conn, to: "/login")
+    else
+      conn = assign(conn, :current_user, current_user)
     end
 
     conn
