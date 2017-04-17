@@ -7,7 +7,7 @@ defmodule JustCi.CiChannel do
 
   # TODO: Once we authorize users against the builds they own, we will need to
   # use some authentication work here
-  def join("ci:" <> _build_id, _params, socket) do
+  def join("ci:" <> buildJobIdentifier, _params, socket) do
     {:ok, socket}
   end
 end

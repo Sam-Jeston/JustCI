@@ -14,26 +14,8 @@ if (token) {
 
   let channel = socket.channel("ci:lobby", {})
   channel.join()
-    .receive("ok", resp => { console.log("Joined successfully", resp) })
+    .receive("ok", resp => { console.log("Joined lobby successfully", resp) })
     .receive("error", resp => { console.log("Unable to join", resp) })
-
-  channel.on("log_event", payload => {
-    console.log(payload)
-  })
-}
-
-export function joinBuildChannel () {
-  // TODO: Fix brittle buildId lookup
-  const buildId = window.location.href.slice(-1)
-  let channel = socket.channel(`ci:${buildId}`, {})
-
-  channel.join()
-    .receive("ok", resp => { console.log("Joined successfully", resp) })
-    .receive("error", resp => { console.log("Unable to join", resp) })
-
-  channel.on("log_event", payload => {
-    console.log(payload)
-  })
 }
 
 export default socket

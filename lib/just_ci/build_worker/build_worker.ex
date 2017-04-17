@@ -17,6 +17,7 @@ defmodule JustCi.BuildWorker do
     |> Repo.preload(:build)
 
     BuildTask.run(job)
+    job
   end
 
   def create_job(build_id, sha, owner, branch) do

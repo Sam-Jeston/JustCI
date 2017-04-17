@@ -84,9 +84,8 @@ defmodule JustCi.HomeController do
     |> Repo.get(job_id)
     |> Repo.preload(:build)
 
-    BuildWorker.start(job.build, job.sha, job.owner, job.branch)
-
-    send_resp(conn, :no_content, "")
+    new_job = BuildWorker.start(job.build, job.sha, job.owner, job.branch)
+    json conn, %{id: new_job.id, status: "pending", branch: new_job.branch}
   end
 
   def find_log(job) do

@@ -1,27 +1,26 @@
 import MainView from '../main'
-import { joinBuildChannel } from '../../socket'
+import socket from '../../socket'
 const targetClass = '#restartJob'
+const jobId = $(targetClass).attr('job_id')
+const buildId = $(targetClass).attr('build_id')
 
 export default class View extends MainView {
-  mount() {
+  mount () {
     super.mount()
     restartJobListener()
-    joinBuildChannel()
+    joinBuildChannel(buildId, jobId)
   }
 
-  unmount() {
+  unmount () {
     super.unmount()
     $(targetClass).unbind()
   }
 }
 
 export function restartJobListener () {
-  const csrf = document.querySelector("meta[name=csrf]").content
+  const csrf = document.querySelector('meta[name=csrf]').content
 
   $(targetClass).click(() => {
-    const jobId = $(targetClass).attr('job_id')
-    const buildId = $(targetClass).attr('build_id')
-
     return $.ajax({
       headers: {
         'X-CSRF-TOKEN': csrf
@@ -29,8 +28,31 @@ export function restartJobListener () {
       url: `/api/ci/${buildId}/restart/${jobId}`,
       contentType: 'application/json',
       method: 'post',
-      success: (s) => console.log(s),
+      success: (newJob) => {
+        $('#logResult').text('')
+        $('#targetBranch').text(newJob.branch)
+        $('#targetStatus').text(newJob.status)
+        $(targetClass).attr('job_id', newJob.id)
+
+        joinBuildChannel(buildId, newJob.id)
+      },
       error: (e) => console.error(e)
     })
+  })
+}
+
+function joinBuildChannel (buildId, jobId) {
+  let channel = socket.channel(`ci:${buildId}:${jobId}`, {})
+
+  channel.join()
+    .receive('ok', resp => null)
+    .receive('error', resp => { console.log('Unable to join build channel', resp) })
+
+  channel.on('log_event', payload => {
+    $('#logResult').append(`<p>${payload.log}</p>`)
+  })
+
+  channel.on('job_finished', payload => {
+    $('#targetStatus').text(payload.status)
   })
 }

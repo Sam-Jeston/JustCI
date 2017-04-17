@@ -1,17 +1,25 @@
 <%= render JustCi.HomeView, "_build_nav.html", build: @build, active: "recent" %>
 <%= if @job do %>
-  <p>Branch: <%= @job.branch %></p>
-  <p>Status: <%= @job.status %></p>
-  <p>Log: </p>
-  <%= for log <- @logs do %>
-    <p><%= log %></p>
-  <% end %>
-  <button id="restartJob"
-    class="btn btn-primary"
-    job_id="<%= @job.id %>"
-    build_id="<%= @build.id %>">
-    Restart Job
-  </button>
+  <div class="row" style="padding-top:10px;">
+    <div class="col-sm-10">
+      <p>Branch: <span id="targetBranch"><%= @job.branch %></span></p>
+      <p>Status: <span id="targetStatus"><%= @job.status %></span></p>
+      <p>Log: </p>
+      <div id="logResult">
+        <%= for log <- @logs do %>
+          <p><%= log %></p>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <button id="restartJob"
+        class="btn btn-primary"
+        job_id="<%= @job.id %>"
+        build_id="<%= @build.id %>">
+        Restart Job
+      </button>
+    </div>
+  </div>
 <% else %>
   <p>This build has not yet been run</p>
 <% end %>

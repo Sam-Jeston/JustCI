@@ -69,12 +69,13 @@ defmodule JustCi.BuildTask do
   # We will use recursion with guards to handle 0 code
   def execute(previous_status, tasks, job, target_path) when previous_status == 0 do
     [ current_task | remaining_tasks ] = tasks
-    IO.inspect target_path
-    IO.inspect "cd " <> target_path <> "; " <> current_task.command <> ";"
+
+    store_log(current_task.command <> "\n", job.id, job.build.id)
+
     cmd = "cd " <> target_path <> "; " <> current_task.command
     %Result{out: output, status: status} = Porcelain.shell(cmd)
 
-    store_log(current_task.command, output, job.id, job.build.id)
+    store_log(output, job.id, job.build.id)
 
     case length remaining_tasks do
       0 -> finish_job(status, job, target_path)
@@ -90,22 +91,20 @@ defmodule JustCi.BuildTask do
   @doc """
   Stores a single task commands log result against a job
   """
-  def store_log(command, output, job_id, build_id) do
-    log = command <> ":\n" <> output
+  def store_log(output, job_id, build_id) do
     changeset = JobLog.changeset(%JobLog{}, %{
       job_id: job_id,
-      entry: log
+      entry: output
     })
 
-    # Ship the log to any clients listening
-    channel = "ci:" <> Integer.to_string build_id
-    JustCi.Endpoint.broadcast(channel, "log_event", %{log: log})
+    broadcast_event(build_id, job_id, "log_event", %{log: output})
 
+    # TODO: Improve this insert to not error on an empty log
     case Repo.insert changeset do
       {:ok, changeset} ->
         changeset
       {:error, changeset} ->
-        raise RuntimeError, message: "There was a problem storing a jobs log"
+        nil
     end
   end
 
@@ -136,6 +135,8 @@ defmodule JustCi.BuildTask do
     end
 
     job_cleanup(target_path)
+
+    broadcast_event(job.build.id, job.id, "job_finished", %{status: status})
 
     case exit_status do
       0 -> GithubStatus.set_passed_status(job.build.repo, job.owner, job.sha)
@@ -171,5 +172,15 @@ defmodule JustCi.BuildTask do
   def job_cleanup(target_path) do
     # TODO: Update this cleanup to remove the build folder as well
     Porcelain.shell("rm -rf " <> target_path)
+  end
+
+  @doc """
+  Broadcasts a payload to the specified CI channel
+  """
+  def broadcast_event(build_id, job_id, matcher, message) do
+    build_id_string = Integer.to_string build_id
+    job_id_string = Integer.to_string job_id
+    channel = "ci:" <> build_id_string <> ":" <> job_id_string
+    JustCi.Endpoint.broadcast(channel, matcher, message)
   end
 end
