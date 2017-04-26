@@ -39,6 +39,10 @@ defmodule JustCi.BuildTask do
   """
   # We should be able to handle other providers here, through guards for BB etc
   def clone_repository(job, tasks) do
+    # TODO: I think we need this something like this as well as all Builds
+    # will run in a fresh docker container
+    # Porcelain.shell("apt-get update && apt-get -y install git")
+
     job_path = "~/Builds/" <> Integer.to_string job.id
     key_path = job_path <> "/ssh-key"
 
@@ -47,6 +51,8 @@ defmodule JustCi.BuildTask do
 
     Porcelain.shell("mkdir -p " <> job_path)
 
+    # TODO: This is no longer correct. We should update this to look for a key
+    # associated with the template. If one exists, we will run the ssh-add logic
     key = ThirdPartyKey
     |> where([k], k.entity == "github")
     |> Repo.one

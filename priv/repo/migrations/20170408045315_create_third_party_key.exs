@@ -3,7 +3,7 @@ defmodule JustCi.Repo.Migrations.CreateThirdPartyKey do
 
   def change do
     create table(:third_party_keys) do
-      add :entity, :string
+      add :name, :string
       add :key, :string, size: 10000
 
       timestamps()

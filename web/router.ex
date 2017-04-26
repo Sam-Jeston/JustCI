@@ -38,6 +38,7 @@ defmodule JustCi.Router do
     get "/settings",  SettingsController, :index
     get "/settings/key", SettingsController, :new_key
     post "/settings/key", SettingsController, :create_key
+    delete "/settings/key", SettingsController, :delete_key
   end
 
   # Other scopes may use custom stacks.

@@ -11,7 +11,7 @@ CI platform with first-class Docker support.
 
 The CI platform should:
   * Run all jobs within Docker containers
-  * Cache docker build layers for faster build times jobs that run Docker build commands
+  * Cache docker build layers for faster build times for jobs that run Docker build commands
   * Be incredibly easy to start using. (AMIs, install and boot scripts etc)
   * Have Github webhook support
 

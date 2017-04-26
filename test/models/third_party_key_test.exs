@@ -3,7 +3,7 @@ defmodule JustCi.ThirdPartyKeyTest do
 
   alias JustCi.ThirdPartyKey
 
-  @valid_attrs %{entity: "some content", key: "some content"}
+  @valid_attrs %{name: "some content", key: "some content"}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

@@ -1,2 +1,23 @@
 <h1>Settings</h1>
-<%= link "Add Github Key", to: settings_path(@conn, :new_key), class: "btn btn-primary" %>
+<h2>Private Keys</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Key Name</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for key <- @keys do %>
+      <tr>
+        <td><%= key.name %></td>
+        <td class="text-right">
+          <!-- TODO: This is our current point of app breakage,  -->
+          <%= link "Delete", to: settings_path(@conn, :delete_key, %{key_id: key.id}), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody
+</table>
+
+<%= link "Add Private Key", to: settings_path(@conn, :new_key), class: "btn btn-primary" %>

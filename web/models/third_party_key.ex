@@ -2,7 +2,7 @@ defmodule JustCi.ThirdPartyKey do
   use JustCi.Web, :model
 
   schema "third_party_keys" do
-    field :entity, :string
+    field :name, :string
     field :key, :string, size: 10000
 
     timestamps()
@@ -13,7 +13,7 @@ defmodule JustCi.ThirdPartyKey do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:entity, :key])
-    |> validate_required([:entity, :key])
+    |> cast(params, [:name, :key])
+    |> validate_required([:name, :key])
   end
 end
