@@ -26,11 +26,10 @@ defmodule JustCi.SettingsController do
   end
 
   def delete_key(conn, %{"key_id" => key_id}) do
-    IO.inspect key_id
-    # key = Repo.get!(ThirdPartyKey, key.id)
-    #
-    # Repo.delete!(key)
-    #
+    key = Repo.get!(ThirdPartyKey, key_id)
+
+    Repo.delete!(key)
+
     conn
     |> put_flash(:info, "Key deleted successfully.")
     |> redirect(to: settings_path(conn, :index))

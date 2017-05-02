@@ -12,7 +12,6 @@
       <tr>
         <td><%= key.name %></td>
         <td class="text-right">
-          <!-- TODO: This is our current point of app breakage,  -->
           <%= link "Delete", to: settings_path(@conn, :delete_key, %{key_id: key.id}), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
         </td>
       </tr>

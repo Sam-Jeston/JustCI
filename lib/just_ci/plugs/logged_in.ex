@@ -1,6 +1,6 @@
 defmodule JustCi.Plugs.LoggedInRedirect do
   import Plug.Conn
-  import Phoenix.Controller, only: [redirect: 2]
+  import Phoenix.Controller
 
   def init(default), do: default
   def call(conn, _default), do: redirect(conn)
@@ -11,7 +11,8 @@ defmodule JustCi.Plugs.LoggedInRedirect do
     current_user = JustCi.Session.current_user(conn)
 
     if (!current_user && !already_redirected_to_login && !registration_path) do
-      redirect(conn, to: "/login")
+      conn
+      |> redirect(to: JustCi.Router.Helpers.session_path(conn, :new))
     else
       conn = assign(conn, :current_user, current_user)
     end

@@ -19,8 +19,8 @@ Upcoming features:
   * Complete Docker support
   * Selection of build runtime
   * Selection of build dependencies (dbs etc)
-  * Association of explicit private keys with jobs
-  * Only allow a single account to be created
+  * Association of explicit private keys with templates
+  * Reset password from setting and via email
 
 Technical Debt:
   * Lack of test coverage
