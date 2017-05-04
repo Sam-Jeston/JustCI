@@ -20,6 +20,9 @@ Upcoming features:
   * Selection of build runtime
   * Selection of build dependencies (dbs etc)
   * Association of explicit private keys with templates
+  * Implementation of dependencies feature
+    - A template will have many dependencies through template_dependencies
+  * Implementation of scripts. A template task can implement a script
   * Reset password from setting and via email
 
 Technical Debt:

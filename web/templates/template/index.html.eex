@@ -4,6 +4,7 @@
   <thead>
     <tr>
       <th>Name</th>
+      <th>Key</th>
 
       <th></th>
     </tr>
@@ -12,6 +13,7 @@
 <%= for template <- @templates do %>
     <tr>
       <td><%= template.name %></td>
+      <td><%= if (template.third_party_key), do: template.third_party_key.name, else: "" %></td>
 
       <td class="text-right">
         <%= link "Show", to: template_path(@conn, :show, template), class: "btn btn-default btn-xs" %>

@@ -7,6 +7,7 @@ alias JustCi.Template
 alias JustCi.Task
 alias JustCi.Build
 alias JustCi.Job
+alias JustCi.ThirdPartyKey
 
 user_changeset = User.changeset(%User{}, %{
   email: "test@test.com",
@@ -15,7 +16,14 @@ user_changeset = User.changeset(%User{}, %{
 
 Registration.create(user_changeset, Repo)
 
-template_1 = Template.changeset(%Template{}, %{ name: "Test Temp 1" })
+key_changeset = ThirdPartyKey.changeset(%ThirdPartyKey{}, %{
+  name: "Test key",
+  key: "ABCDE"
+})
+
+key = Repo.insert! key_changeset
+
+template_1 = Template.changeset(%Template{}, %{ name: "Test Temp 1", third_party_key_id: key.id })
 template_2 = Template.changeset(%Template{}, %{ name: "Test Temp 2" })
 
 t1 = Repo.insert! template_1

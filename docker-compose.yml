@@ -1,0 +1,22 @@
+version: '2'
+services:
+  just_ci:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: mix ecto.create && mix ecto.reset && LOCAL_MODE=true mix phoenix.server
+    ports:
+     - "4000:4000"
+    volumes:
+     - ./:/app
+    links:
+     - postgres:postgres
+    depends_on:
+     - "postgres"
+  postgres:
+    image: postgres:9.6
+    ports:
+     - "6432:5432"
+    environment:
+     - POSTGRES_USER=postgres
+     - POSTGRES_PASSWORD=postgres

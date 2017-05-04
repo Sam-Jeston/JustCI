@@ -3,15 +3,18 @@ defmodule JustCi.TemplateController do
 
   alias JustCi.Template
   alias JustCi.Task
+  alias JustCi.ThirdPartyKey
 
   def index(conn, _params) do
-    templates = Template |> Repo.all
+    templates = Template |> Repo.all |> Repo.preload(:third_party_key)
+    IO.inspect Enum.at(templates, 0).third_party_key.name
     render(conn, "index.html", templates: templates)
   end
 
   def new(conn, _params) do
+    keys = Repo.all(ThirdPartyKey)
     changeset = Template.changeset(%Template{})
-    render(conn, "new.html", changeset: changeset)
+    render(conn, "new.html", changeset: changeset, keys: keys)
   end
 
   def create(conn, %{"template" => template_params}) do
@@ -34,9 +37,10 @@ defmodule JustCi.TemplateController do
   end
 
   def edit(conn, %{"id" => id}) do
+    keys = Repo.all(ThirdPartyKey)
     template = Repo.get!(Template, id)
     changeset = Template.changeset(template)
-    render(conn, "edit.html", template: template, changeset: changeset)
+    render(conn, "edit.html", template: template, changeset: changeset, keys: keys)
   end
 
   def update(conn, %{"id" => id, "template" => template_params}) do
