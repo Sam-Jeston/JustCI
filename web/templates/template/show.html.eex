@@ -1,5 +1,5 @@
 <h2>Template: <%= @template.name %></h2>
-
+<p>Private Key: <%= if (@template.third_party_key), do: @template.third_party_key.name, else: "No Key" %></p>
 <div id="templateTaskOrder">
   <%= for task <- @template.tasks do %>
     <div class="panel panel-default" task_id="<%= task.id %>">

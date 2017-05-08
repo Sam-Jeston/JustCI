@@ -1,6 +1,6 @@
 <h2>Edit template</h2>
 
-<%= render "form.html", changeset: @changeset,
+<%= render "form.html", changeset: @changeset, keys: @keys,
                         action: template_path(@conn, :update, @template) %>
 
 <%= link "Back", to: template_path(@conn, :index) %>

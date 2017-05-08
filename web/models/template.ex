@@ -13,7 +13,6 @@ defmodule JustCi.Template do
   Builds a changeset based on the `struct` and `params`.
   """
   def changeset(struct, params \\ %{}) do
-    IO.inspect struct
     struct
     |> cast(params, [:name, :third_party_key_id])
     |> validate_required([:name])

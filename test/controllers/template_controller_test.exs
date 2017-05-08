@@ -11,7 +11,7 @@ defmodule JustCi.TemplateControllerTest do
   end
 
   test "renders form for new resources", %{conn: conn} do
-    conn = get conn, template_path(conn, :new)
+    conn = get conn, template_path(conn, :new), keys: []
     assert html_response(conn, 200) =~ "New template"
   end
 

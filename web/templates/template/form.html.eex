@@ -12,6 +12,12 @@
   </div>
 
   <div class="form-group">
+    <%= label f, :third_party_key_id, class: "control-label" %>
+    <%= select f, :third_party_key_id, @keys |> Enum.map(&{&1.name, &1.id}) %>
+    <%= error_tag f, :third_party_key_id %>
+  </div>
+
+  <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>
