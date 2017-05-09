@@ -10,8 +10,9 @@ defmodule JustCi.TaskController do
   end
 
   def new(conn, params) do
+    template = Template |> Repo.get!(params["template_id"])
     changeset = Task.changeset(%Task{}, params)
-    render(conn, "new.html", changeset: changeset)
+    render(conn, "new.html", changeset: changeset, template: template)
   end
 
   def create(conn, %{"task" => task_params}) do
@@ -45,8 +46,9 @@ defmodule JustCi.TaskController do
 
   def edit(conn, %{"id" => id}) do
     task = Repo.get!(Task, id)
+    template = Template |> Repo.get!(task.template_id)
     changeset = Task.changeset(task)
-    render(conn, "edit.html", task: task, changeset: changeset)
+    render(conn, "edit.html", task: task, changeset: changeset, template: template)
   end
 
   def update(conn, %{"id" => id, "task" => task_params}) do

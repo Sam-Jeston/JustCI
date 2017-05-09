@@ -16,6 +16,7 @@
 </div>
 
 <%= link "Add task", to: template_task_path(@conn, :new, @template), class: "btn btn-primary" %>
+<%= link "Add Dependency", to: template_dependency_path(@conn, :view, @template), class: "btn btn-primary" %>
 <br/>
 <br/>
 <%= link "Edit", to: template_path(@conn, :edit, @template), class: "btn btn-default" %>

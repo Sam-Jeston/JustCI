@@ -30,6 +30,9 @@ defmodule JustCi.Router do
     resources "/tasks", TaskController
     resources "/depencencies", DependencyController
 
+    get "/templates/:id/dependencies", TemplateDependencyController, :view
+    post "/templates/:id/dependencies", TemplateDependencyController, :link
+
     resources "/registrations", RegistrationController, only: [:new, :create]
 
     get "/login",  SessionController, :new

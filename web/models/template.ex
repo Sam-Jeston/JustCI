@@ -6,6 +6,9 @@ defmodule JustCi.Template do
     has_many :tasks, JustCi.Task
     belongs_to :third_party_key, JustCi.ThirdPartyKey
 
+    has_many :template_dependencies, JustCi.TemplateDependency, on_delete: :delete_all
+    has_many :dependencies, through: [:template_dependencies, :dependency]
+
     timestamps()
   end
 

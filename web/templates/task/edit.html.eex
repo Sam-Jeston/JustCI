@@ -3,4 +3,4 @@
 <%= render "form.html", changeset: @changeset,
                         action: task_path(@conn, :update, @task) %>
 
-<%= link "Back", to: task_path(@conn, :index) %>
+<%= link "Back", to: template_path(@conn, :show, @template) %>

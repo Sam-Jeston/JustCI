@@ -8,6 +8,8 @@ alias JustCi.Task
 alias JustCi.Build
 alias JustCi.Job
 alias JustCi.ThirdPartyKey
+alias JustCi.Dependency
+alias JustCi.TemplateDependency
 
 user_changeset = User.changeset(%User{}, %{
   email: "test@test.com",
@@ -23,11 +25,25 @@ key_changeset = ThirdPartyKey.changeset(%ThirdPartyKey{}, %{
 
 key = Repo.insert! key_changeset
 
+dependency_changeset = Dependency.changeset(%Dependency{}, %{
+  command: "echo \Hello!\"",
+  priority: 1
+})
+
+dependency = Repo.insert! dependency_changeset
+
 template_1 = Template.changeset(%Template{}, %{ name: "Test Temp 1", third_party_key_id: key.id })
 template_2 = Template.changeset(%Template{}, %{ name: "Test Temp 2" })
 
 t1 = Repo.insert! template_1
 t2 = Repo.insert! template_2
+
+template_dependency_changeset = TemplateDependency.changeset(%TemplateDependency{}, %{
+  template_id: t1.id,
+  dependency_id: dependency.id
+})
+
+Repo.insert! template_dependency_changeset
 
 task_1 = Task.changeset(%Task{}, %{
   template_id: t1.id,

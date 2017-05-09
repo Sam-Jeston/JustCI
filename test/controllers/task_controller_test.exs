@@ -18,8 +18,8 @@ defmodule JustCi.TaskControllerTest do
     assert html_response(conn, 200) =~ "Listing tasks"
   end
 
-  test "renders form for new resources", %{conn: conn} do
-    conn = get conn, task_path(conn, :new)
+  test "renders form for new resources", %{conn: conn, template: template} do
+    conn = get conn, task_path(conn, :new), template_id: template.id
     assert html_response(conn, 200) =~ "New task"
   end
 
@@ -43,8 +43,8 @@ defmodule JustCi.TaskControllerTest do
     end
   end
 
-  test "renders form for editing chosen resource", %{conn: conn} do
-    task = Repo.insert! %Task{}
+  test "renders form for editing chosen resource", %{conn: conn, template: template} do
+    task = Repo.insert! %Task{template_id: template.id}
     conn = get conn, task_path(conn, :edit, task)
     assert html_response(conn, 200) =~ "Edit task"
   end
