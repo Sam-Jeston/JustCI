@@ -28,6 +28,7 @@ defmodule JustCi.Router do
 
     resources "/builds", BuildController
     resources "/tasks", TaskController
+    resources "/depencencies", DependencyController
 
     resources "/registrations", RegistrationController, only: [:new, :create]
 

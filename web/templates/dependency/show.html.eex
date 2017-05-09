@@ -1,0 +1,18 @@
+<h2>Show dependency</h2>
+
+<ul>
+
+  <li>
+    <strong>Command:</strong>
+    <%= @dependency.command %>
+  </li>
+
+  <li>
+    <strong>Priority:</strong>
+    <%= @dependency.priority %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: dependency_path(@conn, :edit, @dependency) %>
+<%= link "Back", to: dependency_path(@conn, :index) %>

@@ -29,6 +29,7 @@
               <li><a href="<%= home_path(@conn, :index) %>">Home</a></li>
               <li><a href="<%= build_path(@conn, :index) %>">Builds</a></li>
               <li><a href="<%= template_path(@conn, :index) %>">Templates</a></li>
+              <li><a href="<%= dependency_path(@conn, :index) %>">Dependencies</a></li>
               <li><a href="<%= settings_path(@conn, :index) %>">Settings</a></li>
               <li>
                 <%= link "Logout", to: session_path(@conn, :delete), method: :delete, class: "navbar-text" %>

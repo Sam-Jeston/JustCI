@@ -1,0 +1,28 @@
+<h2>Listing dependencies</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Priority</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for dependency <- @dependencies do %>
+    <tr>
+      <td><%= dependency.command %></td>
+      <td><%= dependency.priority %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: dependency_path(@conn, :show, dependency), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: dependency_path(@conn, :edit, dependency), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: dependency_path(@conn, :delete, dependency), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New dependency", to: dependency_path(@conn, :new) %>
