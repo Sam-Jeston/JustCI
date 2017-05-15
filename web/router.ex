@@ -31,7 +31,8 @@ defmodule JustCi.Router do
     resources "/depencencies", DependencyController
 
     get "/templates/:id/dependencies", TemplateDependencyController, :view
-    post "/templates/:id/dependencies", TemplateDependencyController, :link
+    post "/templates/:id/dependencies/link", TemplateDependencyController, :link
+    post "/templates/:id/dependencies/unlink", TemplateDependencyController, :unlink
 
     resources "/registrations", RegistrationController, only: [:new, :create]
 

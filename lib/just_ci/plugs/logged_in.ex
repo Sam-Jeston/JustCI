@@ -11,7 +11,10 @@ defmodule JustCi.Plugs.LoggedInRedirect do
     current_user = JustCi.Session.current_user(conn)
 
     if (!current_user && !already_redirected_to_login && !registration_path) do
+      # TODO: Fix this. For some reason calling redirect one time leads to a bug
+      # where the html served is named `login` but has the wrong content
       conn
+      |> redirect(to: JustCi.Router.Helpers.session_path(conn, :new))
       |> redirect(to: JustCi.Router.Helpers.session_path(conn, :new))
     else
       conn = assign(conn, :current_user, current_user)

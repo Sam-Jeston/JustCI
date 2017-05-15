@@ -1,4 +1,18 @@
-<p>Yo</p>
-
+<h2>Set <%= @template.name %> Build Dependencies</h2>
+<!-- This is a terrible page at the moment... I fought with Phoenix forms,
+but it'll probably best suite AJAX -->
 <%= for dep <- @dependencies do %>
+  <%= if !dep.selected do %>
+    <%= form_for @conn, template_dependency_path(@conn, :link, @template), [as: :dependency], fn f -> %>
+      <span><%= dep.command %></span>
+      <%= hidden_input f, :dependency_id, [value: dep.dependency_id] %>
+      <%= submit "Link", class: "btn btn-primary btn-sm", style: "display:inline;" %>
+    <% end %>
+  <% else %>
+    <%= form_for @conn, template_dependency_path(@conn, :unlink, @template), [as: :dependency], fn f -> %>
+      <span><%= dep.command %></span>
+      <%= hidden_input f, :dependency_id, [value: dep.dependency_id] %>
+      <%= submit "Unlink", class: "btn btn-danger btn-sm", style: "display:inline;" %>
+    <% end %>
+  <% end %>
 <% end %>
